@@ -1,0 +1,11 @@
+.app-menu {
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+  z-index: 3;
+
+  > div {
+    cursor: pointer;
+    padding: 10px 0;
+  }
+}

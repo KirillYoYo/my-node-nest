@@ -1,8 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PersonService } from './person.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
+import { ApiHeader } from '@nestjs/swagger';
 
+@ApiHeader({
+  name: 'X-MyHeader',
+  description: 'Custom header',
+})
 @Controller('person')
 export class PersonController {
   constructor(private readonly personService: PersonService) {}

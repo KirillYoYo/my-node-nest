@@ -11,7 +11,9 @@ export class PersonService {
   }
 
   async findAll(): Promise<Person[]> {
-    return new Promise((resolve) => setTimeout(() => resolve(base), 200));
+    return new Promise((resolve) => {
+      return setTimeout(() => resolve(base), 200);
+    });
   }
 
   findOne(id: number) {
