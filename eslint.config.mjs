@@ -33,6 +33,7 @@ export default tseslint.config(
         'error',
         {
           endOfLine: 'auto',
+          semi: 'off',
         },
       ],
     },
