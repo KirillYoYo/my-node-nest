@@ -5,7 +5,7 @@ import {
   SwaggerDocumentOptions,
 } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { URI_FOR_CORS } from '../../consts';
+import { URI_FOR_CORS } from '../consts';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -1,6 +1,21 @@
 import React, { useEffect } from 'react'
+import { gql, useQuery } from '@apollo/client'
+
+const GET_PERSON_EMAIL = gql`
+    query GetPerson {
+        person {
+            email
+        }
+    }
+`
 
 const App: React.FC = () => {
+    const { loading, error, data } = useQuery<{ user: any }>(
+        GET_PERSON_EMAIL,
+        {}
+    )
+    console.log('ql', { loading, error, data })
+
     useEffect(() => {
         fetch('http://localhost:3000/person', {
             mode: 'cors',
