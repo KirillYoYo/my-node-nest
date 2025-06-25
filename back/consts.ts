@@ -1,1 +1,1 @@
-export const URI_FOR_CORS = ['https://localhost:9000'];
+export const URI_FOR_CORS = ['http://localhost:9000'];
