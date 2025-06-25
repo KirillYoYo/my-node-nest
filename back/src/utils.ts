@@ -14,5 +14,3 @@ export const createPerson = () => {
 
   return person;
 };
-
-export type Person = ReturnType<typeof createPerson>;

@@ -20,7 +20,7 @@ import { ApiHeader } from '@nestjs/swagger';
 export class PersonController {
   constructor(private readonly personService: PersonService) {}
 
-  @Post()
+  @Post('create')
   create(@Body() createPersonDto: CreatePersonDto) {
     return this.personService.create(createPersonDto);
   }

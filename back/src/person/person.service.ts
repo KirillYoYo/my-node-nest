@@ -1,19 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
-import { base } from './base';
-import { Person } from '../utils';
+import { fakerBase } from './fakerBase';
+import { MongoosePersonService } from '@person/mongoose/mongoosePerson.service';
+import { Person, PersonTypeWithID } from '@person/mongoose/person.schema';
 
 @Injectable()
 export class PersonService {
+  constructor(private readonly db: MongoosePersonService) {}
+
   create(createPersonDto: CreatePersonDto) {
-    return 'This action adds a new person';
+    return this.db.createPerson();
   }
 
-  async findAll(): Promise<Person[]> {
-    return new Promise((resolve) => {
-      return setTimeout(() => resolve(base), 200);
-    });
+  async findAll(): Promise<PersonTypeWithID[]> {
+    return this.db.findAll();
+    /**/
+    // return new Promise((resolve) => {
+    //   return this.db.findAll();
+    //   // return setTimeout(() => resolve(fakerBase), 200);
+    // });
   }
 
   findOne(id: number) {
