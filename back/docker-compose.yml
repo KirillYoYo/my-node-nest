@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    build: .
+    container_name: nest-app
+    restart: always
+    ports:
+      - '3001:3001'
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev
+
+volumes:
+  mongo_data:

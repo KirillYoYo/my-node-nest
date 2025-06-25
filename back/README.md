@@ -31,6 +31,12 @@
 $ npm install
 ```
 
+## Up base (we use official mongo)
+```bash
+$ docker run -d --name mongo-container -p 27017:27017 mongo
+```
+
+
 ## Compile and run the project
 
 ```bash
@@ -96,3 +102,5 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+

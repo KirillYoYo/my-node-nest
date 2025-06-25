@@ -1,10 +1,11 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PersonModule } from './person/person.module';
-import { CorsMiddleware } from './middleWare';
+import { PersonModule } from '@person/person.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Person, PersonSchema } from '@person/mongoose/person.schema';
 
 @Module({
   imports: [
@@ -12,6 +13,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
+    MongooseModule.forRoot('mongodb://localhost:27017/mydatabase'),
+    MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
     PersonModule,
   ],
   controllers: [AppController],
