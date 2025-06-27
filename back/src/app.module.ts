@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Person, PersonSchema } from '@person/mongoose/person.schema';
+import { ImportService } from '@src/ImportDb.service';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { Person, PersonSchema } from '@person/mongoose/person.schema';
     PersonModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ImportService],
 })
 export class AppModule {
   // пока app.enableCors в main.ts
