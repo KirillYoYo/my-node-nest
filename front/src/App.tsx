@@ -19,6 +19,7 @@ const App: React.FC = () => {
     const createCustomUser: () => void = async () => {
         const response = await fetch('http://localhost:3000/person/create', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
         })
         console.log('Created user response:', response)
     }

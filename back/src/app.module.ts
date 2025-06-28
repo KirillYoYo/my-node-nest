@@ -7,14 +7,36 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Person, PersonSchema } from '@person/mongoose/person.schema';
 import { ImportService } from '@src/ImportDb.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+const isDev = process.env.NODE_ENV === 'development';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/mydatabase'),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const username = configService.get<string>('MONGO_USERNAME');
+        const password = configService.get<string>('MONGO_PASSWORD');
+        const host = configService.get<string>('MONGO_HOST');
+        const port = configService.get<string>('MONGO_PORT');
+        const db = configService.get<string>('MONGO_DB');
+        const authSource = configService.get<string>('MONGO_AUTH_SOURCE');
+
+        const uri = `mongodb://${username}:${password}@${isDev ? 'localhost' : host}:${port}/${db}?authSource=${authSource}`;
+
+        return { uri };
+      },
+      inject: [ConfigService],
+    }),
     MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
     PersonModule,
   ],

@@ -33,7 +33,7 @@ $ npm install
 
 ## Up base (we use official mongo)
 ```bash
-$ docker run -d --name mongo-container -p 27017:27017 mongo
+$ docker run -d --name mongo-container -p 27017:27017 mongo --auth
 ```
 
 

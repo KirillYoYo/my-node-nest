@@ -19,7 +19,13 @@ services:
     depends_on:
       - mongo
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mydatabase
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_DB=${MONGO_DB}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_URI=mongodb://=${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/mydatabase?authSource=admin
     volumes:
       - .:/usr/src/app
     command: npm run start:dev
