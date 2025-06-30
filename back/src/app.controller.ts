@@ -25,6 +25,11 @@ export class AppController {
       'Current collections',
       collections.map((el) => el.name),
     );
+    // const persons = await this.connection.db
+    //   .collection('people')
+    //   .find()
+    //   .toArray();
+    // console.log('persons', persons);
     // if (!collections.find((collection) => collection.name === 'shipwrecks')) {
     //   return await this.importService.importBase(
     //     './src/shipwrecks.json',

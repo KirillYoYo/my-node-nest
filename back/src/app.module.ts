@@ -8,6 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Person, PersonSchema } from '@person/mongoose/person.schema';
 import { ImportService } from '@src/ImportDb.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersModule } from '@src/users/users.module';
+import { AuthModule } from '@src/auth/auth.module';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -22,7 +24,11 @@ const isDev = process.env.NODE_ENV === 'development';
       autoSchemaFile: true,
     }),
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+        }),
+      ],
       useFactory: async (configService: ConfigService) => {
         const username = configService.get<string>('MONGO_USERNAME');
         const password = configService.get<string>('MONGO_PASSWORD');
@@ -37,8 +43,10 @@ const isDev = process.env.NODE_ENV === 'development';
       },
       inject: [ConfigService],
     }),
-    MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
     PersonModule,
+    AuthModule,
+    UsersModule,
+    MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
   ],
   controllers: [AppController],
   providers: [AppService, ImportService],
