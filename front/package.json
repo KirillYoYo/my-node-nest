@@ -25,6 +25,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "sass": "^1.89.2",
     "sass-embedded": "^1.88.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
@@ -32,8 +33,10 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.13.8",
+    "antd": "^5.26.3",
     "d3": "^7.9.0",
     "graphql": "^16.11.0",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "react-router-dom": "^7.6.3"
   }
 }
