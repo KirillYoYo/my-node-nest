@@ -6,6 +6,7 @@ export const loginStyles = {
         backgroundColor: '#1677ff',
     } as React.CSSProperties,
     contentStyle: {
+        position: 'relative',
         textAlign: 'center',
         minHeight: 120,
         lineHeight: '120px',

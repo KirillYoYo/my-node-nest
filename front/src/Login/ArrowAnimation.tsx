@@ -1,21 +1,27 @@
 import React from 'react'
 import { CustomPath } from '../utils/CustomPath'
-import RightToLeftAnimation from '../utils/RightToLeftAnimation'
+import AnimatedEntrance from '../utils/AnimatedEntrance'
 
 interface PropTypes {
     flag: boolean
     width?: number
     height?: number
-    xEndAnimationGap?: number
     colorFillArr?: string
+    xStart?: number
+    yStart?: number
+    xEnd?: number
+    yEnd?: number
 }
 
 export default function ArrowAnimation({
     flag,
     width = 150,
     height = 100,
-    xEndAnimationGap = 0,
     colorFillArr,
+    xStart,
+    yStart,
+    xEnd,
+    yEnd,
 }: PropTypes) {
     const gapX = 30
     const gapY = 30
@@ -40,8 +46,11 @@ export default function ArrowAnimation({
     ]
 
     return (
-        <RightToLeftAnimation
-            xEndAnimationGap={xEndAnimationGap}
+        <AnimatedEntrance
+            xStart={xStart}
+            xEnd={xEnd}
+            yStart={yStart}
+            yEnd={yEnd}
             width={width}
             height={height}
             flag={flag}
@@ -57,6 +66,6 @@ export default function ArrowAnimation({
                 withoutSvg
                 colorFillArr={colorFillArr || '#fff'}
             />
-        </RightToLeftAnimation>
+        </AnimatedEntrance>
     )
 }

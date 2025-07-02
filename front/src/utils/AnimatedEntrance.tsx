@@ -3,43 +3,48 @@ import * as d3 from 'd3'
 
 interface PropTypes {
     children: React.ReactNode
-    width?: number | string
-    height?: number | string
+    width?: number
+    height?: number
     duration?: number
     flag?: boolean | string
-    xEndAnimationGap?: number
-    withoutSvg: boolean
+    withoutSvg?: boolean
+    xStart?: number
+    yStart?: number
+    xEnd?: number
+    yEnd?: number
 }
 
-const RightToLeftAnimation = ({
+const AnimatedEntrance = ({
     children,
     width = 400,
     height = 120,
     duration = 1000,
-    xEndAnimationGap = 0,
+    xStart = 0,
+    yStart = 0,
     flag = false,
     withoutSvg = false,
+    xEnd = 50,
+    yEnd = 50,
 }: PropTypes) => {
-    const groupRef = useRef(null)
+    const groupRef = useRef<SVGGElement>(null)
 
     useEffect(() => {
         const g = d3.select(groupRef.current)
 
         if (!flag) {
-            g.attr('transform', `translate(${width}, 0)`)
-                .transition()
+            g.transition()
                 .duration(duration)
                 .ease(d3.easeCubicOut)
-                .attr('transform', `translate(${width}, 0)`)
+                .attr('transform', `translate(${xStart}, ${yStart})`)
             return
         }
 
-        g.attr('transform', `translate(${width}, 0)`) // начальная позиция — за пределами справа
+        g.attr('transform', `translate(${xStart}, ${yStart})`)
             .transition()
             .duration(duration)
             .ease(d3.easeCubicOut)
-            .attr('transform', `translate(${0 + xEndAnimationGap}, 0)`) // финальная позиция
-    }, [flag, groupRef.current])
+            .attr('transform', `translate(${xEnd}, ${yEnd})`)
+    }, [flag, width, height, duration, xEnd, yEnd])
 
     return withoutSvg ? (
         <React.Fragment>
@@ -52,4 +57,4 @@ const RightToLeftAnimation = ({
     )
 }
 
-export default RightToLeftAnimation
+export default AnimatedEntrance
