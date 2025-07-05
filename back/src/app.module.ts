@@ -10,6 +10,8 @@ import { ImportService } from '@src/ImportDb.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from '@src/users/users.module';
 import { AuthModule } from '@src/auth/auth.module';
+import { PaymentsModule } from '@src/payments/payments.module';
+import { BillingModule } from '@src/billing/billing.module';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -44,9 +46,11 @@ const isDev = process.env.NODE_ENV === 'development';
       inject: [ConfigService],
     }),
     PersonModule,
+    PaymentsModule,
     AuthModule,
     UsersModule,
     MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
+    BillingModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImportService],

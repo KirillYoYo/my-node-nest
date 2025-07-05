@@ -37,6 +37,12 @@ $ docker run -d --name mongo-container -p 27017:27017 mongo --auth
 ```
 
 
+for rabbitMQ
+```bash
+$docker run -d --hostname rabbit-host --name rabbitmq  -p 5672:5672 -p 15672:15672  rabbitmq:3-management
+```
+
+
 ## Compile and run the project
 
 ```bash
