@@ -9,3 +9,9 @@ export const getEdges = (arr: Point[]) => {
         }
     })
 }
+
+export function getRandomNumber(n: number, m: number): number {
+    const min = Math.ceil(Math.min(n, m))
+    const max = Math.floor(Math.max(n, m))
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}

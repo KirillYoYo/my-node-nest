@@ -12,6 +12,10 @@ import { UsersModule } from '@src/users/users.module';
 import { AuthModule } from '@src/auth/auth.module';
 import { PaymentsModule } from '@src/payments/payments.module';
 import { BillingModule } from '@src/billing/billing.module';
+import { TransactionController } from '@src/bank/transaction/transaction.controller';
+import { TransactionModule } from '@src/bank/transaction/transaction.module';
+import { AccountModule } from '@src/bank/account/account.module';
+import { PrismaModule } from '@src/bank/prisma/prisma.module';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -51,6 +55,9 @@ const isDev = process.env.NODE_ENV === 'development';
     UsersModule,
     MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
     BillingModule,
+    PrismaModule,
+    TransactionModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImportService],
