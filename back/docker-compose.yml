@@ -3,32 +3,34 @@ version: '3.8'
 services:
   mongo:
     image: mongo
-    container_name: mongo
-    restart: always
+    container_name: my-mongo-container
     ports:
-      - '27017:27017'
-    volumes:
-      - mongo_data:/data/db
-
-  app:
-    build: .
-    container_name: nest-app
+      - "27017:27017"
+    command: ["--auth"]
     restart: always
-    ports:
-      - '3001:3001'
-    depends_on:
-      - mongo
     environment:
-      - MONGO_USERNAME=${MONGO_USERNAME}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
-      - MONGO_DB=${MONGO_DB}
-      - MONGO_PORT=${MONGO_PORT}
-      - MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
-      - MONGO_HOST=${MONGO_HOST}
-      - MONGO_URI=mongodb://=${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/mydatabase?authSource=admin
-    volumes:
-      - .:/usr/src/app
-    command: npm run start:dev
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: user
 
-volumes:
-  mongo_data:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: my-rabbitmq
+    hostname: rabbit-host
+    ports:
+      - "5672:5672"     # порт для AMQP
+      - "15672:15672"   # порт для web-интерфейса управления
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  postgres:
+    image: postgres
+    container_name: my-postgres-banking
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: banking
