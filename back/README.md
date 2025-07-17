@@ -66,6 +66,12 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Swagger
+```
+http://localhost:3000/api/mongo
+http://localhost:3000/api/postgress
+```
+
 ## Run tests
 
 ```bash

@@ -12,6 +12,12 @@ import {
   BILLING_QUEUE,
   BILLING_ROUTING_KEY,
 } from '@src/payments/consts';
+import { PaymentsModule } from '@src/payments/payments.module';
+import { AuthModule } from '@src/auth/auth.module';
+import { UsersModule } from '@src/users/users.module';
+import { PersonModule } from '@src/person/person.module';
+import { TransactionModule } from '@src/bank/transaction/transaction.module';
+import { AccountModule } from '@src/bank/account/account.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,19 +39,31 @@ async function bootstrap() {
     },
   );
 
-  const options: SwaggerDocumentOptions = {
+  const swaggerMongoOptions: SwaggerDocumentOptions = {
     operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+    include: [AppModule, PersonModule, PaymentsModule, AuthModule, UsersModule],
   };
 
   const config = new DocumentBuilder()
-    .setTitle('API Base Methods:')
-    .setDescription('The API Base description')
+    .setTitle('API Mongo Base Methods:')
+    .setDescription('Methods for Mongo')
     .setVersion('1.0')
-    .addTag('base')
+    .addTag('DB1')
     .build();
   const documentFactory = () =>
-    SwaggerModule.createDocument(app, config, options);
-  SwaggerModule.setup('api', app, documentFactory);
+    SwaggerModule.createDocument(app, config, swaggerMongoOptions);
+  SwaggerModule.setup('api/mongo', app, documentFactory);
+
+  const configDb2 = new DocumentBuilder()
+    .setTitle('API postgres')
+    .setDescription('Postrgres methods')
+    .setVersion('1.0')
+    .addTag('DB2')
+    .build();
+  const documentDb2 = SwaggerModule.createDocument(app, configDb2, {
+    include: [TransactionModule, AccountModule],
+  });
+  SwaggerModule.setup('api/postgress', app, documentDb2);
 
   app.enableCors({
     origin: URI_FOR_CORS,
