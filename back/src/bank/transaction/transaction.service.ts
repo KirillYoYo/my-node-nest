@@ -3,9 +3,7 @@ import { PrismaService } from '../prisma/Prisma.service';
 
 @Injectable()
 export class TransactionService {
-  constructor(private prisma: PrismaService) {
-    console.log('!!!!!!!!!!', prisma);
-  }
+  constructor(private prisma: PrismaService) {}
 
   async transfer(senderId: number, receiverId: number, amount: number) {
     if (senderId === receiverId) {

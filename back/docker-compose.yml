@@ -17,8 +17,8 @@ services:
     container_name: my-rabbitmq
     hostname: rabbit-host
     ports:
-      - "5672:5672"     # порт для AMQP
-      - "15672:15672"   # порт для web-интерфейса управления
+      - "5672:5672"
+      - "15672:15672"
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: guest
@@ -31,6 +31,33 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: banking
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: my-pgadmin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Adding connection to PostgreSQL...';
+      /entrypoint.sh;
+      psql -h postgres -U ${POSTGRES_USER} -d ${POSTGRES_DB};
+      "
+
+volumes:
+  pgdata:
+  pgadmin-data:
