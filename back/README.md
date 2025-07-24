@@ -72,6 +72,12 @@ http://localhost:3000/api/mongo
 http://localhost:3000/api/postgress
 ```
 
+
+## pgAdmin
+```
+http://localhost:5050/browser/ admin
+```
+
 ## Run tests
 
 ```bash
