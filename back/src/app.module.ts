@@ -16,6 +16,7 @@ import { TransactionController } from '@src/bank/transaction/transaction.control
 import { TransactionModule } from '@src/bank/transaction/transaction.module';
 import { AccountModule } from '@src/bank/account/account.module';
 import { PrismaModule } from '@src/bank/prisma/prisma.module';
+import { PrismaPagilaModule } from '@src/pagila/prisma/prismaPagila.module';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -56,6 +57,7 @@ const isDev = process.env.NODE_ENV === 'development';
     MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
     BillingModule,
     PrismaModule,
+    PrismaPagilaModule,
     TransactionModule,
     AccountModule,
   ],

@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+  // всегда, всегда генерируем в node_modules. todo как прописать пути
+  output   = "../../../../node_modules/.prisma/pagilaPrismaClient"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PAGILA_DB_URL")
+}
+
+model packages_apt_postgresql_org {
+  id           Int       @id @default(autoincrement())
+  last_updated DateTime? @default(now()) @db.Timestamp(6)
+  aptdata      Json?
+}
+
+model packages_yum_postgresql_org {
+  id           Int       @id @default(autoincrement())
+  last_updated DateTime? @default(now()) @db.Timestamp(6)
+  yumdata      Json?
+}

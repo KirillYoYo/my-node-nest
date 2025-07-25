@@ -47,6 +47,9 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'False'
+      POSTGRES_LOGGING_COLLECTOR: "on"
+      POSTGRES_LOG_MIN_DURATION_STATEMENT: 0
+      POSTGRES_LOG_STATEMENT: "all"
     depends_on:
       - postgres
     volumes:
