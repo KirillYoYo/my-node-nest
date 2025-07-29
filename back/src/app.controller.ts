@@ -22,7 +22,7 @@ export class AppController {
     const collections = await this.connection.db.listCollections().toArray();
     // const result = await this.connection.collection('shipwrecks').drop();
     console.log(
-      'Current collections',
+      'Текущие коллекции из монги: ',
       collections.map((el) => el.name),
     );
     // const persons = await this.connection.db

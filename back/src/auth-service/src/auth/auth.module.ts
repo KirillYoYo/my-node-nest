@@ -5,12 +5,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
-import { UsersService } from '@src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     PassportModule.register({ session: false }),
     UsersModule,
     JwtModule.registerAsync({
@@ -26,14 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   controllers: [AuthController],
 })
 export class AuthModule {
-  constructor(private readonly usersService: UsersService) {
-    this.usersService.findAll().then((users) => {
-      console.log(
-        'users',
-        users.map((user) => user.email),
-      );
-    });
-  }
+  constructor(private readonly usersService: UsersService) {}
 }
 
 /**

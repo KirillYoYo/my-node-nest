@@ -13,14 +13,15 @@ import {
   BILLING_ROUTING_KEY,
 } from '@src/payments/consts';
 import { PaymentsModule } from '@src/payments/payments.module';
-import { AuthModule } from '@src/auth/auth.module';
 import { UsersModule } from '@src/users/users.module';
 import { PersonModule } from '@src/person/person.module';
 import { TransactionModule } from '@src/bank/transaction/transaction.module';
 import { AccountModule } from '@src/bank/account/account.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    // logger: false,
+  });
 
   const rabbitMicro = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
@@ -41,7 +42,7 @@ async function bootstrap() {
 
   const swaggerMongoOptions: SwaggerDocumentOptions = {
     operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
-    include: [AppModule, PersonModule, PaymentsModule, AuthModule, UsersModule],
+    include: [AppModule, PersonModule, PaymentsModule, UsersModule],
   };
 
   const config = new DocumentBuilder()
@@ -70,6 +71,7 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // app.useLogger([]);
   await rabbitMicro.listen();
   await app.listen(process.env.PORT ?? 3000);
 }

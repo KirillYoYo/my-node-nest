@@ -61,4 +61,20 @@ export class AuthService {
       throw new Error('Invalid refresh token');
     }
   }
+
+  async validateAccessToken(token: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      });
+
+      return {
+        userId: payload.sub,
+        email: payload.email,
+        isValid: true,
+      };
+    } catch (e) {
+      return { isValid: false };
+    }
+  }
 }

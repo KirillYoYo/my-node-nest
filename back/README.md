@@ -73,6 +73,14 @@ http://localhost:3000/api/postgress
 ```
 
 
+## Rabbit
+```
+http://localhost:15672/#/queues
+guest
+guest
+```
+
+
 ## pgAdmin
 ```
 http://localhost:5050/browser/ admin

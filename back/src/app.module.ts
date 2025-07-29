@@ -8,8 +8,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Person, PersonSchema } from '@person/mongoose/person.schema';
 import { ImportService } from '@src/ImportDb.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from '@src/users/users.module';
-import { AuthModule } from '@src/auth/auth.module';
 import { PaymentsModule } from '@src/payments/payments.module';
 import { BillingModule } from '@src/billing/billing.module';
 import { TransactionController } from '@src/bank/transaction/transaction.controller';
@@ -17,11 +15,26 @@ import { TransactionModule } from '@src/bank/transaction/transaction.module';
 import { AccountModule } from '@src/bank/account/account.module';
 import { PrismaModule } from '@src/bank/prisma/prisma.module';
 import { PrismaPagilaModule } from '@src/pagila/prisma/prismaPagila.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AUTH_SERVICE } from '../servicesNames';
 
 const isDev = process.env.NODE_ENV === 'development';
 
 @Module({
   imports: [
+    ClientsModule.register([
+      {
+        name: AUTH_SERVICE,
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'auth_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
+      },
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -52,8 +65,6 @@ const isDev = process.env.NODE_ENV === 'development';
     }),
     PersonModule,
     PaymentsModule,
-    AuthModule,
-    UsersModule,
     MongooseModule.forFeature([{ name: Person.name, schema: PersonSchema }]),
     BillingModule,
     PrismaModule,

@@ -4,5 +4,25 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true
+  },
+  "projects": {
+    "main-app": {
+      "type": "application",
+      "root": "src",
+      "entryFile": "main",
+      "sourceRoot": "src",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.build.json"
+      }
+    },
+    "auth": {
+      "type": "application",
+      "root": "src/auth-service/src",
+      "entryFile": "main",
+      "sourceRoot": "src/auth-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "tsconfig.build.json"
+      }
+    }
   }
 }
