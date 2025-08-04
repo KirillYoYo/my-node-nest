@@ -3,7 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/users.service';
 // todo сделать алиасы или что
-import { GET_USERS_MS } from '../../messagesMS';
+import { MessagePatterns } from '../../rootMessages/messagePatterns';
 
 @Controller()
 export class AuthMicroserviceController {
@@ -40,14 +40,10 @@ export class AuthMicroserviceController {
     return this.authService.generateTokens(data);
   }
 
-  @MessagePattern({ cmd: GET_USERS_MS })
+  @MessagePattern(MessagePatterns.GET_USERS_MS)
   async getUsers(@Payload() data: { sub: number; email: string }) {
-    this.usersService.findAll().then((users) => {
-      console.log(
-        'текущие пользователи (users) в auth mongo !',
-        users.map((user) => user.email),
-      );
+    return this.usersService.findAll().then((users) => {
+      return users;
     });
-    return 'response from getUSers';
   }
 }
