@@ -81,3 +81,29 @@
     }
   }
 }
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(to right, #ece9e6, #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.card {
+  width: 400px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background-color: #fff;
+  max-width: 90vw;
+}
+
+.title {
+  text-align: center;
+}
+
+.switchContainer {
+  width: 100%;
+}
