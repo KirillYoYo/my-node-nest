@@ -1,9 +1,9 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/users.service';
 // todo сделать алиасы или что
-import { GET_USERS_MS } from '../../messagesMS';
+import { GET_USERS_MS, LOGIN_MS, REGISTER_MS } from '../../messagesMS';
 
 @Controller()
 export class AuthMicroserviceController {
@@ -49,5 +49,18 @@ export class AuthMicroserviceController {
       );
     });
     return 'response from getUSers';
+  }
+
+  @MessagePattern({ cmd: REGISTER_MS })
+  async register(
+    @Body() body: { username: string; password: string; email: string },
+  ) {
+    const user = await this.usersService.create(body.email, body.password);
+    return user ? 'created' : null;
+  }
+
+  @MessagePattern({ cmd: LOGIN_MS })
+  async login(@Body() body: { password: string; email: string }) {
+    return this.authService.login(body);
   }
 }

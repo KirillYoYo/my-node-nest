@@ -1,8 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ImportService } from '@src/ImportDb.service';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
+import { JwtAuthGuard } from '@src/auth-gateway/jwt-auth.guard';
 
 @Controller()
 export class AppController {
@@ -14,6 +15,7 @@ export class AppController {
     this.listCollections();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('collections')
   async listCollections() {
     if (!this.connection || !this.connection.db) {
@@ -25,6 +27,7 @@ export class AppController {
       'Текущие коллекции из монги: ',
       collections.map((el) => el.name),
     );
+    return collections;
     // const persons = await this.connection.db
     //   .collection('people')
     //   .find()

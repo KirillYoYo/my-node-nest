@@ -31,15 +31,13 @@ export class AuthModule {
 }
 
 /**
- * Client->>AuthController: POST /auth/login
- * AuthController->>LocalAuthGuard: Проверка логина
+ * Client->>Gateway/AuthController: POST /auth/login (dto)
+ * Gateway->>AuthService (RMQ): 'auth_login' (dto)
+ * AuthService->>LocalAuthGuard: Проверка логина
  * LocalAuthGuard->>LocalStrategy: Валидация username/password
  * LocalStrategy->>AuthService: validateUser()
- * AuthService->>LocalStrategy: user / null
- * LocalStrategy->>AuthController: user → req.user
- * AuthController->>AuthService: login(req.user)
  * AuthService->>JwtService: sign(payload)
  * JwtService-->>AuthService: access_token
- * AuthService-->>Client: { access_token }
- *
+ * AuthService-->>Gateway: { access_token }
+ * Gateway-->>Client: { access_token }
  * */

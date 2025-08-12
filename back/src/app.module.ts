@@ -10,13 +10,15 @@ import { ImportService } from '@src/ImportDb.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PaymentsModule } from '@src/payments/payments.module';
 import { BillingModule } from '@src/billing/billing.module';
-import { TransactionController } from '@src/bank/transaction/transaction.controller';
 import { TransactionModule } from '@src/bank/transaction/transaction.module';
 import { AccountModule } from '@src/bank/account/account.module';
 import { PrismaModule } from '@src/bank/prisma/prisma.module';
 import { PrismaPagilaModule } from '@src/pagila/prisma/prismaPagila.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_SERVICE } from '../servicesNames';
+import { AuthController } from '@src/auth-gateway/auth.controller';
+import { JwtStrategy } from '@src/auth-gateway/jwt.strategy';
+import { JwtAuthGuard } from '@src/auth-gateway/jwt-auth.guard';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -72,8 +74,9 @@ const isDev = process.env.NODE_ENV === 'development';
     TransactionModule,
     AccountModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ImportService],
+  controllers: [AppController, AuthController],
+  providers: [AppService, ImportService, JwtStrategy, JwtAuthGuard],
+  exports: [JwtAuthGuard],
 })
 export class AppModule {
   // пока app.enableCors в main.ts

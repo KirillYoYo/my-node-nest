@@ -21,15 +21,19 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
-    const payload = { email: user.email, sub: user._id };
-    return {
-      access_token: this.jwtService.sign(payload),
-      // refresh_token: await this.jwtService.signAsync(payload, {
-      //   secret: process.env.JWT_REFRESH_SECRET,
-      //   expiresIn: '7d',
-      // }),
-    };
+  async login(user: { password: string; email: string }) {
+    const matchedUser = await this.validateUser(user.email, user.password);
+    if (matchedUser) {
+      return {
+        access_token: this.jwtService.sign(user),
+        // refresh_token: await this.jwtService.signAsync(payload, {
+        //   secret: process.env.JWT_REFRESH_SECRET,
+        //   expiresIn: '7d',
+        // }),
+      };
+    } else {
+      return null;
+    }
   }
 
   async generateTokens(user: { sub: number; email: string }) {

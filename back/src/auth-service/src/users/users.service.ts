@@ -13,6 +13,11 @@ export class UsersService {
   }
 
   async create(email: string, password: string) {
+    const existingUser = await this.userModel.findOne({ email });
+    if (existingUser) {
+      // todo ошибка что юзер уже есть
+      return null;
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new this.userModel({ email, password: hashedPassword });
     return newUser.save();
