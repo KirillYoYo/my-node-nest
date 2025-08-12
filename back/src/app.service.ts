@@ -3,7 +3,7 @@ import { Connection } from 'mongoose';
 import { InjectConnection } from '@nestjs/mongoose';
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE } from '../servicesNames';
-import { GET_USERS_MS } from '@src/messagesMS';
+import { getUsersFromUserMs } from '@src/rootMessages/authMessages';
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -21,8 +21,9 @@ export class AppService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    this.client.send({ cmd: GET_USERS_MS }, {}).subscribe((res) => {
-      console.log('📥 Response from microservice:', res);
+    console.log('send');
+    getUsersFromUserMs(this.client).subscribe((res) => {
+      console.log('📥 Response from microservice users:', res);
     });
   }
 }

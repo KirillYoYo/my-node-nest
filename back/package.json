@@ -6,11 +6,15 @@
   "author": "Me",
   "private": true,
   "license": "UNLICENSED",
+  "todo": [
+    "при старте start:dev:all могут быть не видны ошибки одного из модулей",
+    "Как то следить чтобы путь `src/auth-micro-service/src/main.ts` всегда был актуальный"
+  ],
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
-    "start:auth:dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/auth-service/src/main.ts",
+    "start:auth:dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/auth-micro-service/src/main.ts",
     "start:dev:all": "concurrently -n DEV,ALL -c yellow,blue \"npm run start:dev\" \"npm run start:auth:dev\"",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
