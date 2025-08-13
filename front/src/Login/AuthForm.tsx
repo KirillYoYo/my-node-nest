@@ -1,12 +1,19 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
-import { Form, Input, Button, Typography, Switch, Space, Card } from 'antd'
+import React, { useEffect, useState } from 'react'
+import {
+    Form,
+    Input,
+    Button,
+    Typography,
+    Switch,
+    Space,
+    Card,
+    message,
+} from 'antd'
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
-import { RuleObject } from 'antd/es/form'
-import { StoreValue } from 'rc-field-form/lib/interface'
+import { useIsLogin } from './IsLoginContext'
 // @ts-ignore
 import styles from './styles.module.scss'
-import { setToStorage } from '../utils/utils'
-import { useIsLogin } from './IsLoginContext'
+
 const { Title, Text } = Typography
 
 const AuthForm = ({
@@ -14,60 +21,90 @@ const AuthForm = ({
     setIsLogin,
 }: {
     isLogin: boolean
-    setIsLogin: Dispatch<SetStateAction<boolean>>
+    setIsLogin: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-    const [loading, setLoading] = useState<boolean>(false)
-    const [token, setToken] = useState('')
-    const [refreshToken, setRefrehToken] = useState('')
+    const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
     const { isAuth, setIsAuth } = useIsLogin()
 
-    const checkToken = async (tkn: string) => {
-        fetch('http://localhost:3000/collections', {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json',
-                authorization: `Bearer ${tkn}`,
-            },
-        })
+    useEffect(() => {
+        checkToken()
+    }, [])
+
+    const checkToken = async () => {
+        try {
+            const res = await fetch('http://localhost:3000/collections', {
+                credentials: 'include',
+            })
+
+            if (res.ok) {
+                setIsAuth(true)
+                return
+            }
+
+            if (res.status === 401) {
+                const refreshRes = await fetch(
+                    'http://localhost:3000/auth/refresh',
+                    {
+                        method: 'POST',
+                        credentials: 'include',
+                    }
+                )
+
+                setIsAuth(refreshRes.ok)
+            } else {
+                setIsAuth(false)
+            }
+        } catch (error) {
+            console.error('Ошибка проверки токена', error)
+            setIsAuth(false)
+        }
     }
 
-    const login = async (formData: FormData) => {
-        const response = await fetch('http://localhost:3000/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
-        response.json().then((token) => {
-            setToStorage<unknown>('token', token.access_token)
-            setToken(token.access_token)
-            setRefrehToken(token.refresh_token)
-            checkToken(token.access_token)
-            setIsAuth(true)
-        })
-    }
-    const register = async (formData: FormData) => {
-        const response = await fetch('http://localhost:3000/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
+    const sendAuthRequest = async (url: string, data: any) => {
+        try {
+            setLoading(true)
+            const res = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+
+            if (!res.ok) throw new Error(`Ошибка ${res.status}`)
+            return await res.json()
+        } catch (e) {
+            message.error('Ошибка авторизации')
+            return null
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields()
-            if (isLogin) {
-                await login(values)
-            } else {
-                await register(values)
+            const payload = {
+                email: values.email,
+                password: values.password,
+            }
+
+            if (!isLogin && values.confirm !== values.password) {
+                message.error('Пароли не совпадают')
+                return
+            }
+
+            const endpoint = isLogin ? '/auth/login' : '/auth/register'
+            const result = await sendAuthRequest(
+                `http://localhost:3000${endpoint}`,
+                payload
+            )
+
+            if (result) {
+                setIsAuth(true)
             }
         } catch (error) {
-            console.log('Validation failed:', error)
+            console.error('Validation failed:', error)
         }
     }
 
@@ -79,35 +116,17 @@ const AuthForm = ({
                 </Title>
 
                 <Form form={form} layout="vertical">
-                    {!isLogin && (
-                        <Form.Item
-                            name="email"
-                            label="Email"
-                            rules={[
-                                { required: true, message: 'Введите email!' },
-                                { type: 'email', message: 'Невалидный email!' },
-                            ]}
-                        >
-                            <Input
-                                prefix={<MailOutlined />}
-                                placeholder="example@mail.com"
-                            />
-                        </Form.Item>
-                    )}
-
                     <Form.Item
                         name="email"
-                        label="Email пользователя"
+                        label="Email"
                         rules={[
-                            {
-                                required: true,
-                                message: 'Введите Email пользователя!',
-                            },
+                            { required: true, message: 'Введите email!' },
+                            { type: 'email', message: 'Невалидный email!' },
                         ]}
                     >
                         <Input
-                            prefix={<UserOutlined />}
-                            placeholder="Ваш логин"
+                            prefix={<MailOutlined />}
+                            placeholder="example@mail.com"
                         />
                     </Form.Item>
 
@@ -133,10 +152,7 @@ const AuthForm = ({
                                     message: 'Подтвердите пароль!',
                                 },
                                 ({ getFieldValue }) => ({
-                                    validator(
-                                        _: RuleObject,
-                                        value: StoreValue
-                                    ) {
+                                    validator(_, value) {
                                         if (
                                             !value ||
                                             getFieldValue('password') === value
@@ -150,17 +166,13 @@ const AuthForm = ({
                                 }),
                             ]}
                         >
-                            <Input.Password
-                                prefix={<LockOutlined />}
-                                placeholder="Повторите пароль"
-                            />
+                            <Input.Password placeholder="Повторите пароль" />
                         </Form.Item>
                     )}
 
                     <Form.Item>
                         <Button
                             type="primary"
-                            htmlType="submit"
                             block
                             loading={loading}
                             onClick={handleSubmit}

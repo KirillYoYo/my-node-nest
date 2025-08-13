@@ -33,7 +33,7 @@ const LoginStatus = () => {
                     <Text>Вы залогинированный </Text>
                     <Text>
                         <a onClick={out} href="#">
-                            Выйти
+                            Выйти (не работает, удали сам из кук)
                         </a>
                     </Text>
                 </div>
