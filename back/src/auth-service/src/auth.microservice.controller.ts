@@ -3,7 +3,12 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/users.service';
 // todo сделать алиасы или что
-import { GET_USERS_MS, LOGIN_MS, REGISTER_MS } from '../../messagesMS';
+import {
+  GET_USERS_MS,
+  LOGIN_MS,
+  REFRESH_MS,
+  REGISTER_MS,
+} from '../../messagesMS';
 
 @Controller()
 export class AuthMicroserviceController {
@@ -62,5 +67,10 @@ export class AuthMicroserviceController {
   @MessagePattern({ cmd: LOGIN_MS })
   async login(@Body() body: { password: string; email: string }) {
     return this.authService.login(body);
+  }
+
+  @MessagePattern({ cmd: REFRESH_MS })
+  async refresh(@Body() body: string) {
+    return this.authService.refresh(body);
   }
 }

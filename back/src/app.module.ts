@@ -19,6 +19,8 @@ import { AUTH_SERVICE } from '../servicesNames';
 import { AuthController } from '@src/auth-gateway/auth.controller';
 import { JwtStrategy } from '@src/auth-gateway/jwt.strategy';
 import { JwtAuthGuard } from '@src/auth-gateway/jwt-auth.guard';
+import { JwtCookieStrategy } from '@src/auth-gateway/jwt.cokie.strategy';
+import { JwtCookieAuthGuard } from '@src/auth-gateway/jwt.cookieGuard';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -75,8 +77,15 @@ const isDev = process.env.NODE_ENV === 'development';
     AccountModule,
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, ImportService, JwtStrategy, JwtAuthGuard],
-  exports: [JwtAuthGuard],
+  providers: [
+    AppService,
+    ImportService,
+    JwtStrategy,
+    JwtCookieStrategy,
+    JwtAuthGuard,
+    JwtCookieAuthGuard,
+  ],
+  exports: [JwtAuthGuard, JwtCookieAuthGuard],
 })
 export class AppModule {
   // пока app.enableCors в main.ts

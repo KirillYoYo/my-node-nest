@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
 import {
   SwaggerModule,
   DocumentBuilder,
@@ -72,6 +73,7 @@ async function bootstrap() {
   });
 
   // app.useLogger([]);
+  app.use(cookieParser());
   await rabbitMicro.listen();
   await app.listen(process.env.PORT ?? 3000);
 }

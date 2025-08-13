@@ -26,14 +26,32 @@ export class AuthService {
     if (matchedUser) {
       return {
         access_token: this.jwtService.sign(user),
-        // refresh_token: await this.jwtService.signAsync(payload, {
-        //   secret: process.env.JWT_REFRESH_SECRET,
-        //   expiresIn: '7d',
-        // }),
+        refresh_token: this.jwtService.sign(user, {
+          secret: process.env.JWT_REFRESH_SECRET,
+          expiresIn: '7d',
+        }),
       };
     } else {
       return null;
     }
+  }
+
+  async refresh(refreshToken: string) {
+    let payload: any;
+    try {
+      payload = this.jwtService.verify(refreshToken, {
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
+      });
+    } catch (err) {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    const newAccessToken = this.jwtService.sign({
+      sub: payload.sub,
+      email: payload.email,
+    });
+
+    return { access_token: newAccessToken };
   }
 
   async generateTokens(user: { sub: number; email: string }) {

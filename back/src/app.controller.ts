@@ -4,6 +4,7 @@ import { ImportService } from '@src/ImportDb.service';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { JwtAuthGuard } from '@src/auth-gateway/jwt-auth.guard';
+import { JwtCookieAuthGuard } from '@src/auth-gateway/jwt.cookieGuard';
 
 @Controller()
 export class AppController {
@@ -15,7 +16,7 @@ export class AppController {
     this.listCollections();
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtCookieAuthGuard)
   @Get('collections')
   async listCollections() {
     if (!this.connection || !this.connection.db) {
