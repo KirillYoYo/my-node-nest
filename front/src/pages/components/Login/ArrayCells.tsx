@@ -1,8 +1,8 @@
 // Grid.js
 import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
-import { CustomPath } from '../utils/CustomPath'
-import { getEdges } from '../utils/utils'
+import { CustomPath } from '../../../utils/CustomPath'
+import { getEdges } from '../../../utils/utils'
 
 type Point = {
     x: number

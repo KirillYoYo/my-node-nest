@@ -1,4 +1,4 @@
-import { Point } from '../Login/types'
+import { Point } from '../pages/components/Login/types'
 
 export const getEdges = (arr: Point[]) => {
     return arr.map((item, i) => {

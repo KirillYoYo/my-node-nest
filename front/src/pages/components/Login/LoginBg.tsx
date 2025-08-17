@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import { Point } from './types'
@@ -6,14 +7,13 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
     const [positions, setPositions] = useState<Point[]>([])
     const velocitiesRef = useRef<{ dx: number; dy: number }[]>([])
 
-    const width = window.innerWidth
-    const height = window.innerHeight
+    const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
     // Инициализация позиций и скоростей
     useEffect(() => {
         const initialPositions = g.map(() => ({
-            x: Math.random() * width,
-            y: Math.random() * height,
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
         }))
 
         const velocities = g.map(() => ({
@@ -38,8 +38,8 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
                     x += dx
                     y += dy
 
-                    if (x < 0 || x > width) dx *= -1
-                    if (y < 0 || y > height) dy *= -1
+                    if (x < 0 || x > windowSize.width) dx *= -1
+                    if (y < 0 || y > windowSize.height) dy *= -1
 
                     velocitiesRef.current[i] = { dx, dy }
                     return { x, y }
@@ -49,6 +49,26 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
 
         return () => ticker.stop()
     }, [positions.length])
+
+    useEffect(() => {
+        // этот код выполняется только на клиенте
+        setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            })
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    // пока размеры не известны — можно рендерить заглушку или ничего
+    if (windowSize.width === 0) {
+        return null
+    }
 
     return (
         <svg

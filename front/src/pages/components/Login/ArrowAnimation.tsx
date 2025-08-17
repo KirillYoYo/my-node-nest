@@ -1,6 +1,6 @@
 import React from 'react'
-import { CustomPath } from '../utils/CustomPath'
-import AnimatedEntrance from '../utils/AnimatedEntrance'
+import { CustomPath } from '../../../utils/CustomPath'
+import AnimatedEntrance from '../../../utils/AnimatedEntrance'
 
 interface PropTypes {
     flag: boolean

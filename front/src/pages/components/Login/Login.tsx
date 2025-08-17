@@ -3,8 +3,8 @@ import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { loginStyles } from './loginStyles'
 import LoginSider from './LoginSider'
-import { CustomPath } from '../utils/CustomPath'
-import { getEdges } from '../utils/utils'
+import { CustomPath } from '../../../utils/CustomPath'
+import { getEdges } from '../../../utils/utils'
 import FlyingSVGPaths from './LoginBg'
 import * as allPaths from './arrs'
 import { Point } from './types'
@@ -12,8 +12,6 @@ import AuthForm from './AuthForm'
 const allValues = Object.values(allPaths) as Point[][]
 
 const Login = () => {
-    const [token, setToken] = useState('')
-    const [refreshToken, setRefrehToken] = useState('')
     const [isLogin, setIsLogin] = useState(true)
 
     return (

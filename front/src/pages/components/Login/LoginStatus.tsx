@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 const { Text } = Typography
-import { getFromStorage, removeFromStorage } from '../utils/utils'
+import { getFromStorage, removeFromStorage } from '../../../utils/utils'
 import { Typography } from 'antd'
 import { useIsLogin } from './IsLoginContext'
 

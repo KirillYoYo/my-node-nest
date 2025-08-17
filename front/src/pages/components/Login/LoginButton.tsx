@@ -1,10 +1,9 @@
 import React from 'react'
 import ArrowAnimation from './ArrowAnimation'
-import '../fonts.scss'
-import AnimatedEntrance from '../utils/AnimatedEntrance'
-import { CustomPath } from '../utils/CustomPath'
+import AnimatedEntrance from '../../../utils/AnimatedEntrance'
+import { CustomPath } from '../../../utils/CustomPath'
 import { snake, spir2 } from './arrs'
-import { getEdges } from '../utils/utils'
+import { getEdges } from '../../../utils/utils'
 
 interface PropTypes {
     isHovered: boolean
