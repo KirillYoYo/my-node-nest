@@ -13,7 +13,7 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { AUTH_SERVICE } from '../../servicesNames';
 import { ClientProxy } from '@nestjs/microservices';
-import { LOGIN_MS, REFRESH_MS, REGISTER_MS } from '@src/messagesMS';
+import { LOGIN_MS, LOGOUT_MS, REFRESH_MS, REGISTER_MS } from '@src/messagesMS';
 import { firstValueFrom } from 'rxjs';
 
 @Controller('auth')
@@ -88,5 +88,37 @@ export class AuthController {
     }
 
     res.status(200).json({ ok: true });
+  }
+
+  @Post('logout')
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies?.refresh_token;
+
+    // Опционально: отправляем refresh_token в микросервис для инвалидации
+    if (refreshToken) {
+      try {
+        await firstValueFrom(
+          this.client.send({ cmd: LOGOUT_MS }, refreshToken),
+        );
+      } catch (error) {
+        console.error('Ошибка инвалидации refresh токена:', error);
+      }
+    }
+
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    return { message: 'Успешный выход' };
   }
 }
