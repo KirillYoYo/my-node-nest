@@ -6,11 +6,35 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
     const [positions, setPositions] = useState<Point[]>([])
     const velocitiesRef = useRef<{ dx: number; dy: number }[]>([])
 
-    const width = window.innerWidth
-    const height = window.innerHeight
+    // Размеры вьюпорта храним в состоянии, чтобы не трогать window на сервере
+    const [viewport, setViewport] = useState<{ width: number; height: number }>(
+        () => ({ width: 0, height: 0 })
+    )
 
-    // Инициализация позиций и скоростей
+    // Один раз на клиенте читаем window.innerWidth / innerHeight и подписываемся на resize
     useEffect(() => {
+        const updateViewport = () => {
+            if (typeof window === 'undefined') return
+            setViewport({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            })
+        }
+
+        updateViewport()
+        window.addEventListener('resize', updateViewport)
+
+        return () => {
+            window.removeEventListener('resize', updateViewport)
+        }
+    }, [])
+
+    const { width, height } = viewport
+
+    // Инициализация позиций и скоростей (только когда известны реальные размеры)
+    useEffect(() => {
+        if (!width || !height) return
+
         const initialPositions = g.map(() => ({
             x: Math.random() * width,
             y: Math.random() * height,
@@ -23,11 +47,11 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
 
         setPositions(initialPositions)
         velocitiesRef.current = velocities
-    }, [g])
+    }, [g, width, height])
 
     // D3-анимация
     useEffect(() => {
-        if (positions.length === 0) return
+        if (positions.length === 0 || !width || !height) return
 
         const ticker = d3.timer(() => {
             setPositions((prev) =>
@@ -48,7 +72,7 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
         })
 
         return () => ticker.stop()
-    }, [positions.length])
+    }, [positions.length, width, height])
 
     return (
         <svg

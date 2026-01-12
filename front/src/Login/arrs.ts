@@ -727,7 +727,6 @@ export const tKrest = [
 ]
 
 export const serp = [
-    [
         {
             x: 40,
             y: 32,
@@ -848,8 +847,7 @@ export const serp = [
             x: 36,
             y: 32,
         },
-    ],
-]
+    ]
 
 export const someSome = [
     {

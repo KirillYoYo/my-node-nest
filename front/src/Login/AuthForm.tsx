@@ -110,7 +110,7 @@ const AuthForm = ({
 
     return (
         <div className={styles.container}>
-            <Card className={styles.card} bordered={false}>
+            <Card className={styles.card}>
                 <Title level={3} className={styles.title}>
                     {isLogin ? 'Вход в аккаунт' : 'Регистрация'}
                 </Title>

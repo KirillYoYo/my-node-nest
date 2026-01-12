@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { useGetMails } from '../AppHooks'
+import { gql, useQuery } from '@apollo/client'
+
+const GET_PERSON_EMAIL = gql`
+    query GetPerson {
+        person {
+            email
+            _id
+        }
+    }
+`
 
 const Persons = () => {
-    const { loading, error, data } = useGetMails()
+    const { loading, error, data } = useQuery<{ person: Array<{ email: string; _id: string }> }>(
+        GET_PERSON_EMAIL,
+        {}
+    )
     const [token, setToken] = useState('')
     const [refreshToken, setRefrehToken] = useState('')
     console.log('data from graphQl', { loading, error, data })

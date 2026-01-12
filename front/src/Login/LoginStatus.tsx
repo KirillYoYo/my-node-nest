@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect } from 'react'
 const { Text } = Typography
 import { getFromStorage, removeFromStorage } from '../utils/utils'

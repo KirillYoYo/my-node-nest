@@ -107,8 +107,8 @@ const LoginButton = ({ isHovered, text, maskId }: PropTypes) => {
                 x={'50%'}
                 y={'50%'}
                 fontFamily={'LoginFont'}
-                text-anchor="middle"
-                dominant-baseline="middle"
+                textAnchor="middle"
+                dominantBaseline="middle"
                 fontSize={24}
                 fontWeight={800}
                 fill="black"
@@ -119,8 +119,8 @@ const LoginButton = ({ isHovered, text, maskId }: PropTypes) => {
                 x={'50%'}
                 y={'50%'}
                 fontFamily={'LoginFont'}
-                text-anchor="middle"
-                dominant-baseline="middle"
+                textAnchor="middle"
+                dominantBaseline="middle"
                 fontSize={24}
                 fontWeight={800}
                 fill="#ccc"

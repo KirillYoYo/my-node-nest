@@ -29,6 +29,10 @@ export function CustomPath({
         const p1 = points[from]
         const p2 = points[to]
 
+        // if (!p1.x || !p2.y || !p1.y || !p2.x) {
+        //     return
+        // }
+
         if (i === 0) {
             // Начинаем путь с первой точки
             path.push(`M${p1.x},${p1.y}`)
@@ -50,10 +54,9 @@ export function CustomPath({
     path.push('Z') // закрываем путь
 
     const wp = withoutSvg ? React.Fragment : svg
-
     return withoutSvg ? (
         <React.Fragment>
-            {!justDotes && <path d={path.join(' ')} fill={colorFillArr} />}
+            {!justDotes && path && <path d={path.join(' ')} fill={colorFillArr} />}
             {!hideDotes &&
                 points.map((p, i) => (
                     <g>
