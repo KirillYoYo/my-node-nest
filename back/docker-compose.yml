@@ -25,8 +25,8 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
 
   postgres:
-    image: postgres
-    container_name: my-postgres-banking
+    image: postgres:16
+    container_name: my-postgres
     restart: always
     ports:
       - "5432:5432"

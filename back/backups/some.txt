@@ -1,3 +1,14 @@
-docker exec -it DOCKER_ID psql -U POSTGRESS_USER -d pagila -f /tmp/pagila-schema-jsonb.sql
+docker cp backups/pagilaBackups/pagila-schema-jsonb.sql my-postgres:/tmp/pagila-schema-jsonb.sql
+docker cp backups/pagilaBackups/pagila-data-yum-jsonb.backup my-postgres:/tmp/pagila-data-yum-jsonb.backup
 
-docker exec -it DOCKER_ID pg_restore -U POSTGRESS_USER -d pagila /tmp/pagila-data-yum-jsonb.backup
+
+docker exec -it my-postgres \
+  psql -U admin -d pagila -f /tmp/pagila-schema-jsonb.sql
+
+docker exec -it my-postgres \
+    pg_restore -U admin -d pagila /tmp/pagila-data-yum-jsonb.backup
+
+
+
+docker exec -it my-postgres psql -U admin -d banking
+CREATE DATABASE pagila;
