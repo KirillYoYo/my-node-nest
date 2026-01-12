@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { loginStyles } from './loginStyles'
 // @ts-ignore
 import styles from './styles.module.scss'
 import Sider from 'antd/es/layout/Sider'
@@ -27,7 +26,7 @@ const LoginSider = ({ setIsLogin, isLogin }: PropsTypes) => {
     }
 
     return (
-        <Sider width="25%" style={loginStyles.siderStyle}>
+        <Sider width="25%" className={styles.loginSider}>
             <div className={styles.loginButtonsWp}>
                 <div className={styles.loginButtons}>
                     <div

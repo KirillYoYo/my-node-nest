@@ -78,7 +78,6 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
         <svg
             width="100%"
             height="100%"
-            style={{ position: 'absolute', top: 0, left: 0 }}
         >
             {positions.map((pos, i) => (
                 <g key={i} transform={`translate(${pos.x}, ${pos.y})`}>

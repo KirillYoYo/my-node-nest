@@ -100,7 +100,7 @@ const AuthForm = ({
                 payload
             )
 
-            if (result) {
+            if (result && isLogin) {
                 setIsAuth(true)
             }
         } catch (error) {

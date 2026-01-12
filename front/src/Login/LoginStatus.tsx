@@ -4,9 +4,11 @@ const { Text } = Typography
 import { getFromStorage, removeFromStorage } from '../utils/utils'
 import { Typography } from 'antd'
 import { useIsLogin } from './IsLoginContext'
+import { useRouter } from 'next/navigation';
 
 const LoginStatus = () => {
     const { isAuth, setIsAuth } = useIsLogin()
+    const router = useRouter();
 
     useEffect(() => {
         if (getFromStorage('token')) {
@@ -14,9 +16,16 @@ const LoginStatus = () => {
         }
     }, [])
 
-    const out = () => {
-        removeFromStorage('token')
-        setIsAuth(false)
+    const out = async () => {
+        try {
+            await fetch('http://localhost:3000/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+            })
+            setIsAuth(false)
+        } catch (error) {
+            console.error('Ошибка выхода:', error)
+        }
     }
 
     return (
@@ -31,23 +40,20 @@ const LoginStatus = () => {
         >
             {isAuth && (
                 <div>
-                    <Text>Вы залогинированный </Text>
                     <Text>
                         <a onClick={out} href="#">
-                            Выйти (не работает, удали сам из кук)
+                            Выйти
                         </a>
                     </Text>
                 </div>
             )}
             {!isAuth && (
                 <div>
-                    <Text>Вы НЕзалогинированный </Text>
                     <Text>
                         <a
-                            onClick={() => history.pushState({}, '', '/login')}
-                            href="#"
+                            onClick={() => router.push('login')}
                         >
-                            Залогинироваться
+                            Войти
                         </a>
                     </Text>
                 </div>

@@ -1,17 +1,8 @@
-'use client'
-
-import React, { ReactNode } from 'react'
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
-import { IsLoginProvider } from '../Login/IsLoginContext'
-import LoginStatus from '../Login/LoginStatus'
+import type { ReactNode } from 'react'
+import 'antd/dist/reset.css'
 import '../globalStyles.scss'
 import '../fonts.scss'
-
-// Глобальный Apollo-клиент для всего Next-приложения
-const client = new ApolloClient({
-    uri: 'http://localhost:3000/graphql',
-    cache: new InMemoryCache(),
-})
+import Providers from './providers'
 
 type RootLayoutProps = {
     children: ReactNode
@@ -21,12 +12,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     return (
         <html lang="en">
             <body>
-                <ApolloProvider client={client}>
-                    <IsLoginProvider>
-                        <LoginStatus />
-                        {children}
-                    </IsLoginProvider>
-                </ApolloProvider>
+                <Providers>{children}</Providers>
             </body>
         </html>
     )
