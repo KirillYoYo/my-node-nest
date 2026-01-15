@@ -11,7 +11,7 @@ type RootLayoutProps = {
 const RootLayout = ({ children }: RootLayoutProps) => {
     return (
         <html lang="en">
-            <body>
+            <body data-theme='dark'>
                 <Providers>{children}</Providers>
             </body>
         </html>

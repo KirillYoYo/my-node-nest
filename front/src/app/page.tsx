@@ -1,10 +1,10 @@
 'use client'
 
 import React from 'react'
-import Persons from '../Persons'
+import MainPage from './mainPage'
 
 const HomePage = () => {
-    return <Persons />
+    return <MainPage />
 }
 
 export default HomePage
