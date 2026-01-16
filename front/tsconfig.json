@@ -23,7 +23,11 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    }
   },
   "include": [
     "src",
