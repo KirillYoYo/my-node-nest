@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+
 import { PathVertexEditor } from '../../../utils/getPaths'
 
 const BASE_PATH =

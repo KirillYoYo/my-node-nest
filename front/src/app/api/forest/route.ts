@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+
 import { renderSixPlaneScene } from '@/utils/zoneScene'
 
 export async function GET(_req: NextRequest) {

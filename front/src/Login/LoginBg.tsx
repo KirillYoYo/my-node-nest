@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
+
 import { Point } from './types'
 
 const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
@@ -7,9 +8,10 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
     const velocitiesRef = useRef<{ dx: number; dy: number }[]>([])
 
     // Размеры вьюпорта храним в состоянии, чтобы не трогать window на сервере
-    const [viewport, setViewport] = useState<{ width: number; height: number }>(
-        () => ({ width: 0, height: 0 })
-    )
+    const [viewport, setViewport] = useState<{ width: number; height: number }>(() => ({
+        width: 0,
+        height: 0,
+    }))
 
     // Один раз на клиенте читаем window.innerWidth / innerHeight и подписываемся на resize
     useEffect(() => {
@@ -54,7 +56,7 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
         if (positions.length === 0 || !width || !height) return
 
         const ticker = d3.timer(() => {
-            setPositions((prev) =>
+            setPositions(prev =>
                 prev.map((pos, i) => {
                     let { x, y } = pos
                     let { dx, dy } = velocitiesRef.current[i]
@@ -75,10 +77,7 @@ const FlyingSVGPaths = ({ g }: { g: Array<React.ReactNode> }) => {
     }, [positions.length, width, height])
 
     return (
-        <svg
-            width="100%"
-            height="100%"
-        >
+        <svg width="100%" height="100%">
             {positions.map((pos, i) => (
                 <g key={i} transform={`translate(${pos.x}, ${pos.y})`}>
                     {g[i]}

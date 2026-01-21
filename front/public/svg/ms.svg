@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 500" xml:space="preserve">
+
+  <!-- ФОН -->
+    <g id="BACKGROUND">
+    <rect style="fill:red;" width="750" height="500"/>
+  </g>
+
+    <!-- ГРАДИЕНТЫ ДЛЯ ПОДСВЕТКИ -->
+    <defs>
+    <!-- КРОНА: подсветка СПРАВА (тёмный слева → светлый справа) -->
+        <linearGradient id="crown-right" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#292F44"/>
+            <stop offset="40%" stop-color="#373D52"/>
+            <stop offset="70%" stop-color="#5A6580"/>
+            <stop offset="100%" stop-color="#A8B3D9"/>
+    </linearGradient>
+
+        <!-- КРОНА: подсветка СЛЕВА (светлый слева → тёмный справа) -->
+        <linearGradient id="crown-left" x1="100%" y1="50%" x2="0%" y2="50%">
+      <stop offset="0%" stop-color="#A8B3D9"/>
+            <stop offset="30%" stop-color="#5A6580"/>
+            <stop offset="60%" stop-color="#373D52"/>
+            <stop offset="100%" stop-color="#292F44"/>
+    </linearGradient>
+
+        <!-- СТВОЛ: подсветка СПРАВА -->
+        <linearGradient id="bark-right" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6D4C2A"/>
+            <stop offset="50%" stop-color="#B8944A"/>
+            <stop offset="100%" stop-color="#E8D5A3"/>
+    </linearGradient>
+
+        <!-- СТВОЛ: подсветка СЛЕВА -->
+        <linearGradient id="bark-left" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E8D5A3"/>
+            <stop offset="50%" stop-color="#B8944A"/>
+            <stop offset="100%" stop-color="#6D4C2A"/>
+    </linearGradient>
+
+        <!-- БЛИКИ (белые пятна): СПРАВА -->
+        <radialGradient id="highlight-right" cx="20%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8"/>
+            <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#EDF0F7" stop-opacity="0"/>
+    </radialGradient>
+
+        <!-- БЛИКИ: СЛЕВА -->
+        <radialGradient id="highlight-left" cx="80%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8"/>
+            <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#EDF0F7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+    <!-- ДЕРЕВО С ПОДСВЕТКОЙ -->
+    <g id="OBJECTS" class="tree-right">
+    <!-- Основная крона (тёмная) - меняется градиент -->
+        <g>
+      <path style="fill:#FFFFFF;" d="M518.091,263.828l-2.884-6.834l-0.943-3.157l19.805,10.319l-13.094-14.283l-10.278-5.481
+			l-5.741-11.85l-6.547-3.649l-2.077-4.688l-24.684-19.012l-7.613-14.133l-9.95-18.506l-7.203-8.283l-7.558-15.923l-18.001-13.053
+			l-9.991-13.422l-8.72-13.764l-21.349-14.597l-0.383,6.028l7.517,4.51l0.656,9.021l0.875,3.718l2.569,4.005l-3.991-0.314
+			l-0.97-3.636l-11.932-12.916l-4.92-1.353l-0.041-0.014l-2.105-0.588l-4.879-2.392l-0.314,8.884l2.351-1.23l-5.891,16.921
+			l7.709,11.085l2.98-3.458l2.925,2.214l-2.775,4.715l-1.367,11.604l3.964-5.112l1.052-7.394l13.08,9.075l0.342,11.358l-3.13,0.957
+			l3.909,1.353l0.56,5.823l2.802-2.775l-2.46,8.119l1.749-0.67l2.501,5.864l-0.902,6.588l15.622,8.351l-1.927-6.356l10.757,7.449
+			l-5.781-11.126l11.549,8.529l5.084-0.437l8.953,9.54l8.228,14.092l8.611,6.588l7.709,1.9l23.823,26.092l0.246-4.155l5.125,3.964
+			l7.736,12.26l16.388,15.65l-10.005-18.848l6.615,1.613L518.091,263.828z M425.655,182.49l-20.994-20.064l-4.524-10.552
+			l-8.775-8.146l-5.249-10.292l8.816,6.26l-3.034-7.75l10.893,8.16l8.556,11.317l14.338,12.342L425.655,182.49z"/>
+            <path style="fill:#FFFFFF;" d="M471.484,308.795l-50.353-38.926l-14.57,0.328l-25.586-13.641l-51.569-37.778
+			c-4.989-3.786-9.964-7.572-14.953-11.358c-0.219,0.492-0.287,20.762-0.287,20.762l25.737,31.45l3.267,18.739l0.041,0.246
+			l-4.907,16.962l22.429,15.773l-0.806-17.632l-5.686-5.207l-9.526-17.768l13.791,12.246l-13.408-35.099l-1.394-10.073
+			l26.502,26.652l12.711,13.176l24.479,17.741l-7.203-18.834l12.698-0.929l6.82,1.79l30.807,26.885l-8.064-14.105L471.484,308.795z"
+            />
+    </g>
+
+        <!-- БЛИКИ (белые) - меняется градиент -->
+        <path style="fill:url(#highlight-right);" d="M518.091,263.828..."/>
+        <polygon style="fill:url(#highlight-right);" points="626.109,268.038..."/>
+
+        <!-- Светлые пятна на кроне -->
+        <polygon style="fill:url(#highlight-right);" points="369.713,167.893..."/>
+        <polygon style="fill:url(#highlight-right);" points="418.575,225.421..."/>
+
+        <!-- Ствол/ветки - тёмный -->
+        <g>
+      <polygon style="fill:url(#bark-right);" points="392.497,120.793..."/>
+            <polygon style="fill:url(#bark-right);" points="425.683,163.765..."/>
+    </g>
+  </g>
+
+</svg>

@@ -1,33 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 const Forest = () => {
-    const [trees, setTrees] = useState([]);
+    const [trees, setTrees] = useState([])
 
     useEffect(() => {
         // Генерируем паттерн один раз (несколько деревьев)
         const positions = Array.from({ length: 4 }, (_, i) => ({
             x: (i % 2) * 55,
             y: Math.floor(i / 2) * 55,
-        }));
-        setTrees(positions);
-    }, []);
+        }))
+        setTrees(positions)
+    }, [])
 
-    if (!trees.length) return <div>Загрузка...</div>;
+    if (!trees.length) return <div>Загрузка...</div>
 
     return (
-        <div style={{
-            width: '100vw',
-            height: '100vh',
-            margin: 0,
-            padding: 0,
-            overflow: 'hidden'
-        }}>
-            <svg
-                viewBox="0 0 700 700"
-                width="100vw"
-                height="100vh"
-                style={{ display: 'block' }}
-            >
+        <div
+            style={{
+                width: '100vw',
+                height: '100vh',
+                margin: 0,
+                padding: 0,
+                overflow: 'hidden',
+            }}
+        >
+            <svg viewBox="0 0 700 700" width="100vw" height="100vh" style={{ display: 'block' }}>
                 <defs>
                     {/* ✅ Pattern с 4 деревьями (сетка 2x2) */}
                     <pattern
@@ -39,12 +36,7 @@ const Forest = () => {
                         patternUnits="userSpaceOnUse"
                     >
                         {trees.map(({ x, y }, i) => (
-                            <use
-                                key={`pattern-tree-${i}`}
-                                href="#tree"
-                                x={x}
-                                y={y}
-                            />
+                            <use key={`pattern-tree-${i}`} href="#tree" x={x} y={y} />
                         ))}
                     </pattern>
 
@@ -61,10 +53,10 @@ const Forest = () => {
                 </defs>
 
                 {/* ✅ 1 элемент = весь лес! */}
-                <rect width="700" height="700" fill="url(#forest-pattern)"/>
+                <rect width="700" height="700" fill="url(#forest-pattern)" />
             </svg>
         </div>
-    );
-};
+    )
+}
 
-export default Forest;
+export default Forest

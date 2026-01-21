@@ -91,7 +91,6 @@ export class ZoneLayer {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected drawGround(_ctx: CanvasRenderingContext2D, _width: number, _height: number): void {
         // по умолчанию ничего
     }

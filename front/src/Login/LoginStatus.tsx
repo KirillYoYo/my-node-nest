@@ -1,14 +1,17 @@
 'use client'
 import React, { useEffect } from 'react'
+
 const { Text } = Typography
-import { getFromStorage, removeFromStorage } from '../utils/utils'
 import { Typography } from 'antd'
+import { useRouter } from 'next/navigation'
+
+import { getFromStorage, removeFromStorage } from '../utils/utils'
+
 import { useIsLogin } from './IsLoginContext'
-import { useRouter } from 'next/navigation';
 
 const LoginStatus = () => {
     const { isAuth, setIsAuth } = useIsLogin()
-    const router = useRouter();
+    const router = useRouter()
 
     useEffect(() => {
         if (getFromStorage('token')) {
@@ -50,11 +53,7 @@ const LoginStatus = () => {
             {!isAuth && (
                 <div>
                     <Text>
-                        <a
-                            onClick={() => router.push('login')}
-                        >
-                            Войти
-                        </a>
+                        <a onClick={() => router.push('login')}>Войти</a>
                     </Text>
                 </div>
             )}

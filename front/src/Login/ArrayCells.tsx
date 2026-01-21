@@ -1,6 +1,7 @@
 // Grid.js
 import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
+
 import { CustomPath } from '../utils/CustomPath'
 import { getEdges } from '../utils/utils'
 
@@ -11,9 +12,7 @@ type Point = {
 
 const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
     const svgRef = useRef(null)
-    const [selectedCells, setSelectedCells] = useState<
-        { x: number; y: number }[]
-    >([])
+    const [selectedCells, setSelectedCells] = useState<{ x: number; y: number }[]>([])
     const [activeCell, setActiveCell] = useState<Point | null>(null)
 
     const f = selectedCells.filter((el, i) => {
@@ -33,7 +32,7 @@ const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
     console.log('selectedCells', selectedCells)
     console.log(
         'selectedCells x 4',
-        f.map((row) => {
+        f.map(row => {
             return {
                 x: row.x * 4,
                 y: row.y * 4,
@@ -58,24 +57,18 @@ const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
         svg.selectAll('rect')
             .data(cells)
             .join('rect')
-            .attr('x', (d) => d.x * cellSize)
-            .attr('y', (d) => d.y * cellSize)
+            .attr('x', d => d.x * cellSize)
+            .attr('y', d => d.y * cellSize)
             .attr('width', cellSize)
             .attr('height', cellSize)
-            .attr('fill', (d) => {
-                if (f.some((c) => c.x === d.x && c.y === d.y)) {
+            .attr('fill', d => {
+                if (f.some(c => c.x === d.x && c.y === d.y)) {
                     return 'orange'
                 }
-                return selectedCells.some((c) => c.x === d.x && c.y === d.y)
-                    ? 'steelblue'
-                    : 'white'
+                return selectedCells.some(c => c.x === d.x && c.y === d.y) ? 'steelblue' : 'white'
             })
-            .attr('stroke', (d) => {
-                if (
-                    activeCell &&
-                    d.x === activeCell.x &&
-                    d.y === activeCell.y
-                ) {
+            .attr('stroke', d => {
+                if (activeCell && d.x === activeCell.x && d.y === activeCell.y) {
                     return 'red'
                 }
                 return 'black'
@@ -83,17 +76,17 @@ const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
             .attr('stroke', 'black')
             .on('mouseenter', function (event, d) {
                 if (event.buttons & 1) {
-                    setSelectedCells((prev) => {
+                    setSelectedCells(prev => {
                         return [...prev, { x: d.x, y: d.y }]
                     })
                     setActiveCell({ x: d.x, y: d.y })
                 }
             })
             .on('click', function (event, d) {
-                setSelectedCells((prev) => {
-                    const exists = prev.some((c) => c.x === d.x && c.y === d.y)
+                setSelectedCells(prev => {
+                    const exists = prev.some(c => c.x === d.x && c.y === d.y)
                     if (exists) {
-                        return prev.filter((c) => !(c.x === d.x && c.y === d.y))
+                        return prev.filter(c => !(c.x === d.x && c.y === d.y))
                     } else {
                         return [...prev, { x: d.x, y: d.y }]
                     }
@@ -125,10 +118,10 @@ const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
             setActiveCell({ x: newX, y: newY })
 
             // Переключение закраски ячейки
-            setSelectedCells((prev) => {
-                const exists = prev.some((c) => c.x === newX && c.y === newY)
+            setSelectedCells(prev => {
+                const exists = prev.some(c => c.x === newX && c.y === newY)
                 if (exists) {
-                    return prev.filter((c) => !(c.x === newX && c.y === newY))
+                    return prev.filter(c => !(c.x === newX && c.y === newY))
                 } else {
                     return [...prev, { x: newX, y: newY }]
                 }
@@ -152,7 +145,7 @@ const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
                 }}
             >
                 <CustomPath
-                    points={selectedCells.map((el) => ({
+                    points={selectedCells.map(el => ({
                         x: el.x * 4,
                         y: el.y * 4,
                     }))}

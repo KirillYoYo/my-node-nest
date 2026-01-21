@@ -26,11 +26,11 @@ const Persons = () => {
             },
             mode: 'cors',
         })
-            .then((res) => {
+            .then(res => {
                 console.log('Persons from API', res)
                 return res.json()
             })
-            .then((data) => console.log(data))
+            .then(data => console.log(data))
     }, [token])
 
     const createCustomUser: () => void = async () => {

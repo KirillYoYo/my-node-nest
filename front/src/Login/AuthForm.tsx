@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import {
-    Form,
-    Input,
-    Button,
-    Typography,
-    Switch,
-    Space,
-    Card,
-    message,
-} from 'antd'
+import { Form, Input, Button, Typography, Switch, Space, Card, message } from 'antd'
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
+
 import { useIsLogin } from './IsLoginContext'
 // @ts-ignore
 import styles from './styles.module.scss'
@@ -43,13 +35,10 @@ const AuthForm = ({
             }
 
             if (res.status === 401) {
-                const refreshRes = await fetch(
-                    'http://localhost:3000/auth/refresh',
-                    {
-                        method: 'POST',
-                        credentials: 'include',
-                    }
-                )
+                const refreshRes = await fetch('http://localhost:3000/auth/refresh', {
+                    method: 'POST',
+                    credentials: 'include',
+                })
 
                 setIsAuth(refreshRes.ok)
             } else {
@@ -95,10 +84,7 @@ const AuthForm = ({
             }
 
             const endpoint = isLogin ? '/auth/login' : '/auth/register'
-            const result = await sendAuthRequest(
-                `http://localhost:3000${endpoint}`,
-                payload
-            )
+            const result = await sendAuthRequest(`http://localhost:3000${endpoint}`, payload)
 
             if (result && isLogin) {
                 setIsAuth(true)
@@ -124,10 +110,7 @@ const AuthForm = ({
                             { type: 'email', message: 'Невалидный email!' },
                         ]}
                     >
-                        <Input
-                            prefix={<MailOutlined />}
-                            placeholder="example@mail.com"
-                        />
+                        <Input prefix={<MailOutlined />} placeholder="example@mail.com" />
                     </Form.Item>
 
                     <Form.Item
@@ -135,10 +118,7 @@ const AuthForm = ({
                         label="Пароль"
                         rules={[{ required: true, message: 'Введите пароль!' }]}
                     >
-                        <Input.Password
-                            prefix={<LockOutlined />}
-                            placeholder="Пароль"
-                        />
+                        <Input.Password prefix={<LockOutlined />} placeholder="Пароль" />
                     </Form.Item>
 
                     {!isLogin && (
@@ -153,15 +133,10 @@ const AuthForm = ({
                                 },
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
-                                        if (
-                                            !value ||
-                                            getFieldValue('password') === value
-                                        ) {
+                                        if (!value || getFieldValue('password') === value) {
                                             return Promise.resolve()
                                         }
-                                        return Promise.reject(
-                                            new Error('Пароли не совпадают!')
-                                        )
+                                        return Promise.reject(new Error('Пароли не совпадают!'))
                                     },
                                 }),
                             ]}
@@ -171,12 +146,7 @@ const AuthForm = ({
                     )}
 
                     <Form.Item>
-                        <Button
-                            type="primary"
-                            block
-                            loading={loading}
-                            onClick={handleSubmit}
-                        >
+                        <Button type="primary" block loading={loading} onClick={handleSubmit}>
                             {isLogin ? 'Войти' : 'Зарегистрироваться'}
                         </Button>
                     </Form.Item>

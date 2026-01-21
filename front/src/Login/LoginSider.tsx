@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+
 // @ts-ignore
-import styles from './styles.module.scss'
 import Sider from 'antd/es/layout/Sider'
+
+import styles from './styles.module.scss'
 import LoginButton from './LoginButton'
 
 interface PropsTypes {

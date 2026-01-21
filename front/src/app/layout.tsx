@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+
 import 'antd/dist/reset.css'
 import '../globalStyles.scss'
 import '../fonts.scss'
@@ -11,7 +12,7 @@ type RootLayoutProps = {
 const RootLayout = ({ children }: RootLayoutProps) => {
     return (
         <html lang="en">
-            <body data-theme='dark'>
+            <body data-theme="dark">
                 <Providers>{children}</Providers>
             </body>
         </html>

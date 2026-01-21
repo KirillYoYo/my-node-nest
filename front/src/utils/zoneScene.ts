@@ -1,8 +1,9 @@
-import { createCanvas, ZoneLayer, ZoneObject, ZoneScene, LayerId, ZoneObjectConfig } from './zoneCore'
 import { promises as fs } from 'fs'
+import path from 'node:path'
+
+import { createCanvas, ZoneLayer, ZoneObject, ZoneScene } from './zoneCore'
 import { PathGroupZoneObject, PathConfig } from './PathZoneObject'
 import { parseSvgToPathConfigs } from './parseSvgPaths'
-import path from 'node:path'
 
 type PopulatePathObjectsOptions = {
     maxObjects: number
@@ -11,6 +12,7 @@ type PopulatePathObjectsOptions = {
     zRange?: { min: number; max: number }
     /** Цвет для всех объектов этого вызова */
     fill: string
+    strokeWidth?: number
 }
 
 export type PathConfig = {
@@ -26,9 +28,9 @@ export function populateLayerWithPathObjects(
     width: number,
     height: number,
     PathZoneObjectCtor: typeof import('./PathZoneObject').PathZoneObject,
-    options: PopulatePathObjectsOptions,
+    options: PopulatePathObjectsOptions
 ) {
-    const { maxObjects, pathData, sizeRange, zRange, fill } = options
+    const { maxObjects, pathData, sizeRange, zRange, fill, strokeWidth } = options
 
     const sizeMin = sizeRange?.min ?? 80
     const sizeMax = sizeRange?.max ?? 160
@@ -36,9 +38,9 @@ export function populateLayerWithPathObjects(
     const zMax = zRange?.max ?? 1.0
 
     // базовые уровни (как в draw)
-    const yFrontBase    = 0.95 * height
-    const yTop          = 0
-    const yBottom       = height
+    const yFrontBase = 0.95 * height
+    const yTop = 0
+    const yBottom = height
 
     for (let i = 0; i < maxObjects; i++) {
         const z = zMin + Math.random() * (zMax - zMin)
@@ -114,13 +116,13 @@ export function populateLayerWithPathObjects(
                 anchorX: 0.5,
                 anchorY: 1,
                 d: pathData,
+                strokeWidth: strokeWidth,
             }),
             width,
-            height,
+            height
         )
     }
 }
-
 
 // Цвета планов
 const SKY_COLOR = '#1e2a78'
@@ -160,7 +162,7 @@ export class BackFarLayer extends ZoneLayer {
         // (0, baseY) -> (width*0.25, baseY-60) -> (width*0.5, baseY-40)
         const x0 = 0
         const y0 = baseY
-        const x1 = width * 0.25
+        // const x1 = width * 0.25
         const y1 = baseY - 60
         const x2 = width * 0.5
         const y2 = baseY - 40
@@ -207,7 +209,7 @@ export class BackLayer extends ZoneLayer {
         // (0, baseY) -> (width*0.2, baseY-30) -> (width*0.45, baseY-10)
         const x0 = 0
         const y0 = baseY
-        const x1 = width * 0.2
+        // const x1 = width * 0.2
         const y1 = baseY - 30
         const x2 = width * 0.45
         const y2 = baseY - 10
@@ -255,12 +257,12 @@ export class MidBackLayer extends ZoneLayer {
         // S2: (width*0.4, baseY) -> (width*0.75, baseY+20) -> (width, baseY+5)
         const x0 = 0
         const y0 = baseY
-        const x1 = width * 0.15
+        // const x1 = width * 0.15
         const y1 = baseY - 10
         const x2 = width * 0.4
         const y2 = baseY
 
-        const x3 = width * 0.75
+        // const x3 = width * 0.75
         const y3 = baseY + 20
         const x4 = width
         const y4 = baseY + 5
@@ -300,7 +302,6 @@ export class MidBackLayer extends ZoneLayer {
         // (0,0) — левый верх холста, поэтому никакого translate здесь не делаем.
         this.drawObjects(ctx)
     }
-
 }
 
 // Средний передний план
@@ -315,12 +316,12 @@ export class MidFrontLayer extends ZoneLayer {
         // Кривая: (0, baseY) -> (width*0.3, baseY-10) -> (width*0.55, baseY+5) -> (width*0.8, baseY+20) -> (width, baseY+10)
         const x0 = 0
         const y0 = baseY
-        const x1 = width * 0.3
+        // const x1 = width * 0.3
         const y1 = baseY - 10
         const x2 = width * 0.55
         const y2 = baseY + 5
 
-        const x3 = width * 0.8
+        // const x3 = width * 0.8
         const y3 = baseY + 20
         const x4 = width
         const y4 = baseY + 10
@@ -382,7 +383,7 @@ export class FrontLayer extends ZoneLayer {
 
     draw(ctx: CanvasRenderingContext2D, width: number, height: number) {
         const baseY = height * 0.95
-        const layerHeight = height - baseY || 1 // высота "толщины" плана
+        // const layerHeight = height - baseY || 1 // высота "толщины" плана
 
         // 1. Рисуем фон и задаём контур плана
         ctx.save()
@@ -423,17 +424,18 @@ export async function addSvgFileAsObjectToLayer(
         anchorX?: number
         anchorY?: number
         defaultFill?: string
-    },
+    }
 ) {
     const { width, height, x, y, z, anchorX = 0.5, anchorY = 1, defaultFill = '#ffffff' } = options
 
     const svgContent = await fs.readFile(svgFilePath, 'utf-8')
     const paths: PathConfig[] = parseSvgToPathConfigs(svgContent)
 
+    // console.log('paths', paths[0])
+
     if (paths.length === 0) {
         return
     }
-
 
     layer.addObject(
         new PathGroupZoneObject({
@@ -446,8 +448,116 @@ export async function addSvgFileAsObjectToLayer(
             anchorX,
             anchorY,
             paths,
-        }),
+        })
     )
+}
+
+/**
+ * Заполняет слой сложными объектами (группой path'ов из SVG-файла),
+ * используя ту же геометрию зон, что и populateLayerWithPathObjects.
+ */
+export async function populateLayerWithSvgObjects(
+    layer: ZoneLayer,
+    width: number,
+    height: number,
+    svgFilePath: string,
+    options: {
+        maxObjects: number
+        sizeRange?: { min: number; max: number }
+        zRange?: { min: number; max: number }
+        defaultFill?: string
+    }
+) {
+    const { maxObjects, sizeRange, zRange, defaultFill = '#ffffff' } = options
+
+    const sizeMin = sizeRange?.min ?? 80
+    const sizeMax = sizeRange?.max ?? 160
+    const zMin = zRange?.min ?? 0.0
+    const zMax = zRange?.max ?? 1.0
+
+    // читаем SVG один раз и парсим все path/polygon
+    const svgContent = await fs.readFile(svgFilePath, 'utf-8')
+    const paths: PathConfig[] = parseSvgToPathConfigs(svgContent)
+    if (!paths.length) {
+        return
+    }
+
+    const yFrontBase = 0.95 * height
+    const yTop = 0
+    const yBottom = height
+
+    for (let i = 0; i < maxObjects; i++) {
+        const z = zMin + Math.random() * (zMax - zMin)
+
+        const baseSize = sizeMin + Math.random() * (sizeMax - sizeMin)
+        const sizeScale = 1 - z * 0.2
+        const objWidth = baseSize * sizeScale
+        const objHeight = baseSize * sizeScale
+
+        const x = Math.random() * width
+        let y: number
+
+        if (layer instanceof SkyLayer) {
+            const backFar = new BackFarLayer()
+            const lower = yTop
+            const upper = backFar.getGroundYAtX(x, width, height)
+            const zoneTop = Math.min(lower, upper)
+            const zoneBottom = Math.max(lower, upper)
+            y = zoneTop + Math.random() * (zoneBottom - zoneTop)
+        } else if (layer instanceof BackFarLayer) {
+            const backFar = new BackFarLayer()
+            const back = new BackLayer()
+            const lower = backFar.getGroundYAtX(x, width, height)
+            const upper = back.getGroundYAtX(x, width, height)
+            const zoneTop = Math.min(lower, upper)
+            const zoneBottom = Math.max(lower, upper)
+            y = zoneTop + Math.random() * (zoneBottom - zoneTop)
+        } else if (layer instanceof BackLayer) {
+            const back = new BackLayer()
+            const midBack = new MidBackLayer()
+            const lower = back.getGroundYAtX(x, width, height)
+            const upper = midBack.getGroundYAtX(x, width, height)
+            const zoneTop = Math.min(lower, upper)
+            const zoneBottom = Math.max(lower, upper)
+            y = zoneTop + Math.random() * (zoneBottom - zoneTop)
+        } else if (layer instanceof MidBackLayer) {
+            const midBack = new MidBackLayer()
+            const midFront = new MidFrontLayer()
+            const lower = midBack.getGroundYAtX(x, width, height)
+            const upper = midFront.getGroundYAtX(x, width, height)
+            const zoneTop = Math.min(lower, upper)
+            const zoneBottom = Math.max(lower, upper)
+            y = zoneTop + Math.random() * (zoneBottom - zoneTop)
+        } else if (layer instanceof MidFrontLayer) {
+            const midFront = new MidFrontLayer()
+            const lower = midFront.getGroundYAtX(x, width, height)
+            const upper = yFrontBase
+            const zoneTop = Math.min(lower, upper)
+            const zoneBottom = Math.max(lower, upper)
+            y = zoneTop + Math.random() * (zoneBottom - zoneTop)
+        } else if (layer instanceof FrontLayer) {
+            const layerHeight = yBottom - yFrontBase || 1
+            y = Math.random() * layerHeight
+        } else {
+            y = yTop + Math.random() * (yBottom - yTop)
+        }
+
+        layer.addObject(
+            new PathGroupZoneObject({
+                x,
+                y,
+                z,
+                width: objWidth,
+                height: objHeight,
+                fill: defaultFill,
+                anchorX: 0.5,
+                anchorY: 1,
+                paths,
+            }),
+            width,
+            height
+        )
+    }
 }
 
 export async function renderSixPlaneScene(width: number, height: number): Promise<Buffer> {
@@ -464,21 +574,13 @@ export async function renderSixPlaneScene(width: number, height: number): Promis
     // динамический импорт, чтобы избежать циклической зависимости между zoneScene и PathZoneObject
     const { PathZoneObject } = await import('./PathZoneObject')
 
-    // Пример: заполняем midBackLayer случайными объектами
-    populateLayerWithPathObjects(frontLayer, width, height, PathZoneObject, {
-        maxObjects: 40,
-        pathData,
-        zRange: { min: 0.0, max: 1 },
-        sizeRange: { min: 150, max: 170 },
-        fill: '#5d8a85',
-    })
-
     populateLayerWithPathObjects(midFrontLayer, width, height, PathZoneObject, {
         maxObjects: 100,
         pathData,
         zRange: { min: 0.0, max: 1 },
         sizeRange: { min: 120, max: 140 },
-        fill: '#5e9590',
+        fill: '#65a19b',
+        strokeWidth: 2,
     })
 
     populateLayerWithPathObjects(midBackLayer, width, height, PathZoneObject, {
@@ -486,30 +588,33 @@ export async function renderSixPlaneScene(width: number, height: number): Promis
         pathData,
         zRange: { min: 0.0, max: 1 },
         sizeRange: { min: 80, max: 100 },
-        fill: '#4a7570',
+        fill: '#51817c',
+        strokeWidth: 1,
     })
 
     populateLayerWithPathObjects(backLayer, width, height, PathZoneObject, {
         maxObjects: 550,
         pathData,
         zRange: { min: 0.0, max: 1 },
-        sizeRange: { min: 40, max: 70 },
+        sizeRange: { min: 60, max: 80 },
         fill: '#375552',
+        strokeWidth: 1,
     })
 
     populateLayerWithPathObjects(backFarLayer, width, height, PathZoneObject, {
-        maxObjects: 1550,
+        maxObjects: 3050,
         pathData,
         zRange: { min: 0.0, max: 1 },
         sizeRange: { min: 20, max: 25 },
         fill: '#375552',
+        strokeWidth: 1,
     })
 
-    const complexPaths: PathConfig[] = [
-        { d: 'M0,0 L50,0 L50,50 Z', fill: '#ff0000' },
-        { d: 'M10,10 L40,10 L25,40 Z', fill: '#00ff00' },
-        // ...
-    ]
+    // const complexPaths: PathConfig[] = [
+    //     { d: 'M0,0 L50,0 L50,50 Z', fill: '#ff0000' },
+    //     { d: 'M10,10 L40,10 L25,40 Z', fill: '#00ff00' },
+    //     // ...
+    // ]
     // backFarLayer.addObject(
     //     new PathGroupZoneObject({
     //         x: width * 0.5,
@@ -535,6 +640,19 @@ export async function renderSixPlaneScene(width: number, height: number): Promis
         z: 0.0,
         anchorX: 0.5,
         anchorY: 1,
+        defaultFill: '#e0e1dd',
+    })
+
+    const tree0Path = path.join(process.cwd(), 'public', 'svg', 'detail-tree.svg')
+    const tree1Path = path.join(process.cwd(), 'public', 'svg', 'trees1.svg')
+    const tree2Path = path.join(process.cwd(), 'public', 'svg', 'trees2.svg')
+    const tree3Path = path.join(process.cwd(), 'public', 'svg', 'trees3.svg')
+    const arr = [tree1Path, tree2Path, tree3Path]
+
+    await populateLayerWithSvgObjects(frontLayer, width, height, tree0Path, {
+        maxObjects: 90,
+        sizeRange: { min: 200, max: 260 },
+        zRange: { min: 0.0, max: 1.0 },
         defaultFill: '#e0e1dd',
     })
 

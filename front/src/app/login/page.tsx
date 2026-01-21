@@ -2,6 +2,7 @@
 
 import React from 'react'
 import dynamic from 'next/dynamic'
+
 import styles from '../../Login/loginStyles.module.scss'
 
 const LoginPage = () => {
@@ -14,14 +15,12 @@ const Login = dynamic(() => import('../../Login/Login'), {
     loading: () => (
         <div className={styles['login-root']}>
             <div className={styles['login-layout']}>
-                <div style={{display: "flex", alignItems: 'center', justifyContent: 'center'}} className={styles['login-content']}>
+                <div
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    className={styles['login-content']}
+                >
                     <div className={styles['login-background']} />
-                    <svg
-                        width="80"
-                        height="80"
-                        viewBox="0 0 80 80"
-                        aria-label="Loading"
-                    >
+                    <svg width="80" height="80" viewBox="0 0 80 80" aria-label="Loading">
                         <line
                             x1="10"
                             y1="10"
@@ -50,7 +49,7 @@ const Login = dynamic(() => import('../../Login/Login'), {
                             />
                             <animate
                                 id="second"
-                                begin='first.end'
+                                begin="first.end"
                                 attributeName="x1"
                                 dur="0.8s"
                                 values="10; 20; 30; 40; 50"
@@ -58,7 +57,7 @@ const Login = dynamic(() => import('../../Login/Login'), {
                                 fill="freeze"
                             />
                             <animate
-                                begin='first.end'
+                                begin="first.end"
                                 attributeName="y1"
                                 dur="0.8s"
                                 values="10; 20; 30; 40; 50"
@@ -67,7 +66,7 @@ const Login = dynamic(() => import('../../Login/Login'), {
                             />
                             <animate
                                 id="third"
-                                begin='second.end'
+                                begin="second.end"
                                 attributeName="x2"
                                 dur="0.8s"
                                 values="50; 40; 30; 20; 10"
@@ -75,7 +74,7 @@ const Login = dynamic(() => import('../../Login/Login'), {
                                 fill="freeze"
                             />
                             <animate
-                                begin='second.end'
+                                begin="second.end"
                                 attributeName="y2"
                                 dur="0.8s"
                                 values="10; 20; 30; 40; 50"
@@ -84,7 +83,7 @@ const Login = dynamic(() => import('../../Login/Login'), {
                             />
                             <animate
                                 id="fourth"
-                                begin='third.end'
+                                begin="third.end"
                                 attributeName="x1"
                                 dur="0.8s"
                                 values="50; 40; 30; 20; 10"
@@ -92,7 +91,7 @@ const Login = dynamic(() => import('../../Login/Login'), {
                                 fill="freeze"
                             />
                             <animate
-                                begin='third.end'
+                                begin="third.end"
                                 attributeName="y1"
                                 dur="0.8s"
                                 values="50; 40; 30; 20; 10"

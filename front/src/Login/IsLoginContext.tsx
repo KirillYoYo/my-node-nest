@@ -11,9 +11,7 @@ export const IsLoginProvider = ({ children }: { children: ReactNode }) => {
     const [isAuth, setIsAuth] = useState<boolean | undefined>(undefined)
 
     return (
-        <isLoginContext.Provider value={{ isAuth, setIsAuth }}>
-            {children}
-        </isLoginContext.Provider>
+        <isLoginContext.Provider value={{ isAuth, setIsAuth }}>{children}</isLoginContext.Provider>
     )
 }
 

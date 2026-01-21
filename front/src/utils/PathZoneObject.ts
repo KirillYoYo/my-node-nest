@@ -1,13 +1,19 @@
 import { SVGPathData } from 'svg-pathdata'
+
+import { adjustBrightness } from '@/utils/utils'
+
 import { ZoneObject, ZoneObjectConfig } from './zoneCore'
 
 export type PathZoneObjectConfig = ZoneObjectConfig & {
     d: string
+    strokeWidth?: number
 }
 
 export type PathConfig = {
     d: string
     fill?: string
+    isDark?: boolean
+    isLight?: boolean
 }
 
 type PathBounds = {
@@ -25,11 +31,13 @@ type PathBounds = {
 export class PathZoneObject extends ZoneObject {
     private pathData: SVGPathData
     private bounds: PathBounds
+    private strokeWidth?: number
 
     constructor(cfg: PathZoneObjectConfig) {
         super(cfg)
         this.pathData = new SVGPathData(cfg.d)
         this.bounds = this.computeBounds()
+        this.strokeWidth = cfg.strokeWidth
     }
 
     private computeBounds(): PathBounds {
@@ -122,6 +130,12 @@ export class PathZoneObject extends ZoneObject {
             }
         }
 
+        ctx.strokeStyle = '#1a1f2e' // цвет обводки
+        ctx.lineWidth = this.strokeWidth || 0 // толщина
+        // ctx.lineCap = 'round';        // скругленные концы
+        // ctx.lineJoin = 'round';       // скругленные углы
+        ctx.stroke()
+
         ctx.fill()
         ctx.restore()
     }
@@ -205,8 +219,51 @@ export class PathGroupZoneObject extends ZoneObject {
         ctx.scale(s, s)
         ctx.translate(-minX, -minY)
 
+        const lightAngle = 90 // 0=справа, 90=сверху, 180=слева
+
         this.pathDatas.forEach((pathData, index) => {
             const cfg = this.pathConfigs[index]
+
+            const rad = (lightAngle * Math.PI) / 180
+            const lightDir = {
+                x: Math.cos(rad),
+                y: Math.sin(rad),
+            }
+
+            const avgBrightness = calculatePathBrightness(pathData, lightDir)
+
+            let gradient
+
+            if (cfg.isDark || cfg.isLight) {
+                // длина градиента относительно размера объекта
+                const L = ctx.canvas.width * 0.8
+
+                // градиент ВНУТРИ локальной области объекта
+                const x0 = -lightDir.x * L
+                const y0 = -lightDir.y * L
+                const x1 = lightDir.x * L
+                const y1 = lightDir.y * L
+
+                gradient = ctx.createLinearGradient(x0, y0, x1, y1)
+
+                if (cfg.isDark) {
+                    const shadowFactor = 0.35 + avgBrightness * 0.45
+
+                    gradient.addColorStop(0, adjustBrightness(cfg.fill, -65 * shadowFactor))
+                    gradient.addColorStop(0.5, adjustBrightness(cfg.fill, -35 * shadowFactor))
+                    gradient.addColorStop(1, adjustBrightness(cfg.fill, -8 * shadowFactor))
+                } else if (cfg.isLight) {
+                    const highlightFactor = 0.4 + avgBrightness * 0.6
+
+                    gradient.addColorStop(0, adjustBrightness(cfg.fill, 45 * highlightFactor))
+                    gradient.addColorStop(0.4, adjustBrightness(cfg.fill, 18 * highlightFactor))
+                    gradient.addColorStop(1, cfg.fill)
+                }
+
+                ctx.fillStyle = gradient
+            } else {
+                ctx.fillStyle = cfg.fill
+            }
 
             ctx.beginPath()
 
@@ -227,15 +284,41 @@ export class PathGroupZoneObject extends ZoneObject {
                     case SVGPathData.CLOSE_PATH:
                         ctx.closePath()
                         break
-                    default:
-                        break
                 }
             }
 
-            ctx.fillStyle = cfg.fill ?? this.fill
             ctx.fill()
         })
 
         ctx.restore()
     }
+}
+
+function calculatePathBrightness(pathData, lightDir) {
+    let totalDot = 0
+    let segmentCount = 0
+
+    // Анализируем ключевые точки path для определения ориентации
+    for (let i = 1; i < pathData.commands.length; i++) {
+        const prevCmd = pathData.commands[i - 1]
+        const currCmd = pathData.commands[i]
+
+        if (prevCmd.type === SVGPathData.LINE_TO && currCmd.type === SVGPathData.LINE_TO) {
+            // Нормаль к сегменту (перпендикуляр)
+            const dx = currCmd.x - prevCmd.x
+            const dy = currCmd.y - prevCmd.y
+            const length = Math.sqrt(dx * dx + dy * dy)
+
+            if (length > 1) {
+                // Игнорируем микросегменты
+                // Нормаль (поверхность смотрит на свет)
+                const normal = { x: -dy / length, y: dx / length }
+                const dot = normal.x * lightDir.x + normal.y * lightDir.y
+                totalDot += Math.max(-1, Math.min(1, dot))
+                segmentCount++
+            }
+        }
+    }
+
+    return segmentCount > 0 ? (totalDot / segmentCount + 1) / 2 : 0.5
 }
