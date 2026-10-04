@@ -9,7 +9,7 @@ type Point = {
     y: number
 }
 
-const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
+const Grid = ({ rows = 60, cols = 60, cellSize = 20 }) => {
     const svgRef = useRef(null)
     const [selectedCells, setSelectedCells] = useState<
         { x: number; y: number }[]
@@ -29,17 +29,6 @@ const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
         }
         return true
     })
-
-    console.log('selectedCells', selectedCells)
-    console.log(
-        'selectedCells x 4',
-        f.map((row) => {
-            return {
-                x: row.x * 4,
-                y: row.y * 4,
-            }
-        })
-    )
 
     useEffect(() => {
         const svg = d3.select(svgRef.current)
@@ -139,8 +128,42 @@ const Grid = ({ rows = 30, cols = 30, cellSize = 30 }) => {
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [activeCell, cols, rows])
 
+    const mirrorSelection = () => {
+        setSelectedCells((prev) => {
+            if (prev.length === 0) return prev
+            const maxX = Math.max(...prev.map(c => c.x))
+            const result = [...prev]
+            const has = (x, y) => result.some(c => c.x === x && c.y === y)
+            prev.forEach(c => {
+                const mx = 2 * maxX + 1 - c.x
+                if (mx >= 0 && mx < cols && !has(mx, c.y)) {
+                    result.push({ x: mx, y: c.y })
+                }
+            })
+            return result
+        })
+    }
+
+    const clearAll = () => {
+        setSelectedCells([])
+        setActiveCell(null)
+    }
+
+    console.log('', selectedCells.filter(
+        (item, index, self) =>
+            index === self.findIndex(
+                obj => obj.x === item.x && obj.y === item.y
+            )
+    ))
+
     return (
         <div style={{ position: 'relative' }}>
+
+            <div style={{ marginBottom: 8, display: 'flex', gap: 8 }}>
+                <button onClick={mirrorSelection}>Отразить</button>
+                <button onClick={clearAll}>Очистить</button>
+            </div>
+
             <div
                 className="some"
                 style={{

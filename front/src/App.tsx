@@ -5,6 +5,7 @@ import Login from './Login/Login'
 import './globalStyles.scss'
 import './fonts.scss'
 import Payment from './Payment/Payment'
+import ArrayCells from "./Login/ArrayCells";
 
 const App: React.FC = () => {
     return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/payment" element={<Payment />} />
+                    <Route path="/path" element={<ArrayCells />} />
                     <Route path="/" element={<Persons />} />
                     <Route
                         path="*"
